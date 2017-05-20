@@ -46,11 +46,7 @@ class ImageService {
             //TODO: File Size Checking (Less than 1mb)
             //TODO: Remove hardcoded .png, replace with image type
             def generatedImageName = java.util.UUID.randomUUID().toString() + ".png"
-
-            //For storage in file systems
-            def servletContext = Holders.getServletContext()
-            def storagePath = servletContext.getRealPath(imagePath)
-
+            def storagePath = imagePath
             def storagePathDirectory = new File(storagePath)
 
             if (!storagePathDirectory.exists()) {
@@ -94,20 +90,20 @@ class ImageService {
         return rsp
     }
 
+    //For images in project folder
     def saveImage(String imagePath) {
         def rsp = [:]
         try {
             def servletContext = Holders.getServletContext()
+            def realImagePath = servletContext.getRealPath(imagePath)
+
             def storePath = grailsApplication.config.storage.hamperImage
             def generatedImageName = java.util.UUID.randomUUID().toString() + ".png"
+            def destinationFilePath = storePath + "/" + generatedImageName
 
-            def newFilePath = storePath + "/" + generatedImageName
 
-            def relativePath = servletContext.getRealPath(imagePath)
-            def newRelativePath = servletContext.getRealPath(newFilePath)
-
-            def fileEx = new File(relativePath)
-            def fileDest = new File(newRelativePath)
+            def fileEx = new File(realImagePath)
+            def fileDest = new File(destinationFilePath)
 
             def fileExPath = fileEx.toPath()
             def fileDestPath = fileDest.toPath()
@@ -116,7 +112,7 @@ class ImageService {
 
             def image = new Image(
                 name: generatedImageName,
-                path: newFilePath
+                path: destinationFilePath
             ).save(flush: true, failOnError: true)
 
             rsp.result = image

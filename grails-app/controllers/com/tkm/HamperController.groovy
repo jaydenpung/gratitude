@@ -97,6 +97,9 @@ class HamperController {
                     throw new Exception (uploadRsp.errors)
                 }
             }
+            else {
+                throw new Exception("No Image uploaded")
+            }
 
             def hamper = new Hamper(
                 name: params.name,

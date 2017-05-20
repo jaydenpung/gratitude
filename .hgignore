@@ -1,6 +1,8 @@
 syntax:glob
 
 target
+target/classes
+target/*
 .target
 target-eclipse
 .classpath

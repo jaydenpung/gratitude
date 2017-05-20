@@ -1,5 +1,11 @@
 package com.tkm
 
+import org.springframework.web.multipart.commons.CommonsMultipartFile
+import grails.util.Holders
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.Files
+
 import com.tkm.*
 
 class TestController {
@@ -13,7 +19,7 @@ class TestController {
         try {
         }
         catch (Exception ex) {
-            log.error("createDefaultSecUsers() failed: ${ex.message}", ex)
+            log.error("test() failed: ${ex.message}", ex)
         }
     }
 }

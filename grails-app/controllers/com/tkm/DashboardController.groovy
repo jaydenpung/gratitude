@@ -91,4 +91,14 @@ class DashboardController {
             log.error("getCartList() failed: ${ex.message}", ex)
         }
     }
+
+    def landingPage() {
+        try {
+            log.info ">>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+            render (view: "landingPage")
+        }
+        catch (Exception ex) {
+            log.error("landingPage() failed: ${ex.message}", ex)
+        }
+    }
 }

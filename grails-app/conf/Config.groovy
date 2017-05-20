@@ -12,7 +12,7 @@
 // }
 
 grails.config.locations = [
-    "file:/etc/final-config.groovy",
+    "file:/etc/gratitude/final-config.groovy",
 ]
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
@@ -149,6 +149,6 @@ assets {
 }
 
 storage {
-    productImage = "/images/productImage"
-    hamperImage = "/images/hamperImage"
+    productImage = "/etc/gratitude/images/productImage"
+    hamperImage = "/etc/gratitude/images/hamperImage"
 }
