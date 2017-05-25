@@ -49,7 +49,7 @@
                 <div class="item  col-xs-4 col-lg-4">
                     <div class="thumbnail">
                         <a href="${createLink(controller:'hamper', action: 'view', params: [id: hamper.id])}">
-                            <img src="${resource(file: hamper.image.path)}" style="max-height:250px; min-height:250px"/>
+                            <img src="${createLink(action: 'renderImage', controller:'image')}/${hamper.image.generatedName}" style="max-height:250px; min-height:250px">
                         </a>
                         <div class="caption">
                             <h4 class="group inner list-group-item-heading">

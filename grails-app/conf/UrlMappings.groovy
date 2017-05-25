@@ -6,7 +6,10 @@ class UrlMappings {
                 // apply constraints here
             }
         }
-        "/"(controller: "dashboard", acton: "landingPage")
+        "/" {
+            controller = "dashboard"
+            action = "index"
+        }
         "/login/$action?"(controller: "login")
         "/logout/$action?"(controller: "logout")
         "500"(view:'/error')

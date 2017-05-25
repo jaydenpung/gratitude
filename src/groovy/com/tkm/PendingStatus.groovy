@@ -5,5 +5,6 @@ public enum PendingStatus {
     PENDING_PAYMENT,
     PENDING_CONFIRM,
     PENDING_DELIVERY,
-    PENDING_DONE
+    PENDING_DONE,
+    PENDING_NONE
 }

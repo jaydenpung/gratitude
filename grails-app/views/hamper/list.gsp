@@ -8,54 +8,59 @@
     <body>
         <asset:javascript src="datatables.min.js"/>
         <asset:stylesheet src="datatables.min.css"/>
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header"><g:message code="hamper.list.label" /></h1>
-            </div>
-        </div>
-        <g:render template="/shared/messages"/>
-        <form class="form-horizontal" role="form" id="searchForm">
-            <div class="panel panel-default" id="#tableWrapper">
-                <div class="panel-heading"><g:message code="hamper.list.panel.label"/></div>
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="hamper" class="col-sm-2 control-label  input-sm"><g:message code="hamper.name.label"/></label>
-                        <div class="col-sm-5">
-                            <input type="text" class="form-control input-sm" id="hamperName" name="hamperName">
-                        </div>
-                    </div>
 
-                    <button type="button" id="searchButton" class="btn btn-default"><g:message code="default.button.search.label"/></button>
-
-                    <div class="table-responsive tablewrapper">
-                        <table id="hamperTable" class="table table-striped table-bordered table-hover table-condensed">
-                            <thead>
-                                <tr>
-                                    <th class="selectAll"><input type="checkbox" id="selectAllCheckBox"/></th>
-                                    <th><g:message code="hamper.id.label"/></th>
-                                    <th><g:message code="hamper.name.label"/></th>
-                                    <th><g:message code="hamper.price.label"/></th>
-                                    <th><g:message code="hamper.quantity.label"/></th>
-                                    <th><g:message code="default.actions.label"/></th>
-                                </tr>
-                            </thead>
-
-                            <tfoot>
-                            </tfoot>
-
-                            <tbody>
-                            </tbody>
-                        </table>
+        <section class="module-small" style="padding-top: 0px">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header"><g:message code="hamper.list.label" /></h1>
                     </div>
                 </div>
+                <g:render template="/shared/messages"/>
+                <form class="form-horizontal" role="form" id="searchForm">
+                    <div class="panel panel-default" id="#tableWrapper">
+                        <div class="panel-heading"><g:message code="hamper.list.panel.label"/></div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="hamper" class="col-sm-2 control-label  input-sm"><g:message code="hamper.name.label"/></label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control input-sm" id="hamperName" name="hamperName">
+                                </div>
+                            </div>
+
+                            <button type="button" id="searchButton" class="btn btn-default"><g:message code="default.button.search.label"/></button>
+
+                            <div class="table-responsive tablewrapper">
+                                <table id="hamperTable" class="table table-striped table-bordered table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th class="selectAll"><input type="checkbox" id="selectAllCheckBox"/></th>
+                                            <th><g:message code="hamper.id.label"/></th>
+                                            <th><g:message code="hamper.name.label"/></th>
+                                            <th><g:message code="hamper.price.label"/></th>
+                                            <th><g:message code="hamper.quantity.label"/></th>
+                                            <th><g:message code="default.actions.label"/></th>
+                                        </tr>
+                                    </thead>
+
+                                    <tfoot>
+                                    </tfoot>
+
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-sm-12">
+                        <a href="${createLink(controller:'hamper', action: 'create')}" class="btn btn-default"><g:message code="default.button.create.label"/></a>
+                        <g:actionSubmit class="btn btn-default buttons" action="delete" value="${message(code: 'default.button.delete.label')}" disabled="true"/>
+                    </div>
+                  </div>
+                </form>
             </div>
-            <div class="row">
-            <div class="col-sm-12">
-                <a href="${createLink(controller:'hamper', action: 'create')}" class="btn btn-default"><g:message code="default.button.create.label"/></a>
-                <g:actionSubmit class="btn btn-default buttons" action="delete" value="${message(code: 'default.button.delete.label')}" disabled="true"/>
-            </div>
-          </div>
-        </form>
+        </section>
 
         <script>
             selectAllCheckBox('#selectAllCheckBox', '[name=id]', '.buttons');

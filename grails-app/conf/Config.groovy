@@ -128,6 +128,7 @@ grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.tkm.SecUser'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.tkm.SecUserRole'
 grails.plugin.springsecurity.authority.className = 'com.tkm.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+    '/hamper/**':                      ['ROLE_ADMIN'],
     '/':                              ['permitAll'],
     '/index':                         ['permitAll'],
     '/index.gsp':                     ['permitAll'],
@@ -135,10 +136,11 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
     '/**/js/**':                      ['permitAll'],
     '/**/css/**':                     ['permitAll'],
     '/**/images/**':                  ['permitAll'],
-    '/**/favicon.ico':                ['permitAll']
+    '/**/favicon.ico':                ['permitAll'],
 ]
 grails.plugin.springsecurity.securityConfigType = 'InterceptUrlMap'
 grails.plugin.springsecurity.interceptUrlMap = [
+    '/hamper/**': ['IS_AUTHENTICATED_FULLY'],
     '/**':               ['IS_AUTHENTICATED_ANONYMOUSLY']
 ]
 

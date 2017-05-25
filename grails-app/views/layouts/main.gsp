@@ -1,120 +1,111 @@
 <!DOCTYPE html>
-<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
-<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
-<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
-<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"><!--<![endif]-->
-    <head>
-        <!-- FIXME: Clean up css ad js, change link resource to file -->
-        <asset:stylesheet src="bootstrap.min.css"/>
-        <asset:stylesheet src="shop-homepage.css"/>
-        <asset:stylesheet src="tkm.css"/>
-        <asset:stylesheet src="bootstrapValidator.min.css"/>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--  
+    Document Title
+    =============================================
+    -->
+    <title>Gratitude Hampers</title>
+    <!--  
+    Favicons
+    =============================================
+    -->
+    <link rel="apple-touch-icon" sizes="57x57" href="../assets/images/favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../assets/images/favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../assets/images/favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/images/favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../assets/images/favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../assets/images/favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../assets/images/favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../assets/images/favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/images/favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/images/favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicons/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="assets/images/favicons/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <!--  
+    Stylesheets
+    =============================================
+    
+    -->
+    <!-- Default stylesheets-->
+    <link href="../assets/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Template specific stylesheets-->
+    <link href="../assets/css/roboto_condensed.css" rel="stylesheet">
+    <link href="../assets/css/volkhov.css" rel="stylesheet">
+    <link href="../assets/css/open_sans.css" rel="stylesheet">
+    <link href="../assets/lib/animate.css/animate.css" rel="stylesheet">
+    <link href="../assets/lib/components-font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../assets/lib/et-line-font/et-line-font.css" rel="stylesheet">
+    <link href="../assets/lib/flexslider/flexslider.css" rel="stylesheet">
+    <link href="../assets/lib/owl.carousel/dist/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="../assets/lib/owl.carousel/dist/assets/owl.theme.default.min.css" rel="stylesheet">
+    <link href="../assets/lib/magnific-popup/dist/magnific-popup.css" rel="stylesheet">
+    <link href="../assets/lib/simple-text-rotator/simpletextrotator.css" rel="stylesheet">
+    <!-- Main stylesheet and color file-->
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <link id="color-scheme" href="../assets/css/colors/default.css" rel="stylesheet">
 
-        <asset:javascript src="jquery.js"/>
-        <asset:javascript src="bootstrap.min.js"/>
-        <asset:javascript src="bootstrapValidator.min.js"/>
-        <asset:javascript src="tkm.js"/>
-    </head>
-    <body>
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <g:link class="navbar-brand" controller="dashboard" action="index"><g:message code="menuItem.home.label"/></g:link>
-                </div>
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <sec:ifAllGranted roles="ROLE_ADMIN">
-                    <div class="collapse navbar-collapse col-md-10" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li>
-                                <g:link controller="product" action="list"><g:message code="menuItem.productMaintenance.label"/></g:link>
-                            </li>
-                            <li>
-                                <g:link controller="hamper" action="list"><g:message code="menuItem.hamperMaintenance.label"/></g:link>
-                            </li>
-                        </ul>
-                    </div>
-                </sec:ifAllGranted>
-                <div class="pull-right col-md-2">
-                    <button class="btn btn-info btn-lg" id="viewCartBtn" data-toggle="modal" data-target="#cartModal">View Cart</button>
-                </div>
-                <div class="pull-right col-md-2">
-                    <sec:ifLoggedIn>
-                        <g:link controller="login" action="logout" class="btn btn-info btn-sm">
-                            <span class="glyphicon glyphicon-log-out"></span> <g:message code="menuItem.logout.label"/>
-                        </g:link>
-                    </sec:ifLoggedIn>
-                    <sec:ifNotLoggedIn>
-                        <g:link controller="login" action="index" class="btn btn-success"><g:message code="menuItem.login.label"/></g:link>
-                    </sec:ifNotLoggedIn>
-                </div>
-                <!-- /.navbar-collapse -->
-            </div>
-            <!-- /.container -->
-        </nav>
+    <!--  
+    JavaScripts
+    =============================================
+    -->
+    <script src="../assets/lib/jquery/dist/jquery.js"></script>
+    <script src="../assets/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../assets/lib/wow/dist/wow.js"></script>
+    <script src="../assets/lib/jquery.mb.ytplayer/dist/jquery.mb.YTPlayer.js"></script>
+    <script src="../assets/lib/isotope/dist/isotope.pkgd.js"></script>
+    <script src="../assets/lib/imagesloaded/imagesloaded.pkgd.js"></script>
+    <script src="../assets/lib/flexslider/jquery.flexslider.js"></script>
+    <script src="../assets/lib/owl.carousel/dist/owl.carousel.min.js"></script>
+    <script src="../assets/lib/smoothscroll.js"></script>
+    <script src="../assets/lib/magnific-popup/dist/jquery.magnific-popup.js"></script>
+    <script src="../assets/lib/simple-text-rotator/jquery.simple-text-rotator.min.js"></script>
+    <script src="../assets/js/plugins.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <asset:javascript src="gratitude.js"/>
 
-        <div class="container-fluid main">
-            <div class="row">
-                <div class="col-md-10 col-lg-10 col-sm-12 col-xs-12">
-                    <div class="auto-overflow">
-                        <div class="container">
-                            <div class="row">
+  </head>
+  <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
+    <main>
 
-                                <!-- Side Bar -->
-                                <div class="col-md-3">
-                                    <p class="lead">Shop Name</p>
-                                    <div class="list-group">
-                                        <a href="#" class="list-group-item">Category 1</a>
-                                        <a href="#" class="list-group-item">Category 2</a>
-                                        <a href="#" class="list-group-item">Category 3</a>
-                                    </div>
-                                    <sec:ifLoggedIn>
-                                        <p>Logged in as: <sec:username></sec:username></p>
-                                    </sec:ifLoggedIn>
-                                </div>
-                                <!-- Page Content -->
-                                <div class="col-md-9">
-                                    <g:layoutBody />
-                                </div>
+      <!-- Loader -->
+      <div class="page-loader">
+        <div class="loader">Loading...</div>
+      </div>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <g:render template="/shared/cartModal"/>
-
-        <!-- /.container -->
+      <!-- Navigation Bar -->
+      <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
         <div class="container">
-            <hr>
-            <!-- Footer -->
-            <footer>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <p>Copyright &copy; Your Website 2014</p>
-                    </div>
-                </div>
-            </footer>
-        </div>
-        <!-- /.container -->
-        <script>
-            $(document).ready(function(){
-                $('#cartModal').on('shown.bs.modal', function() {
-                    var ajaxUrl = "${createLink(controller: 'dashboard', action: 'getCartList')};"
-                    refreshSoppingList(ajaxUrl);
-                });
-            });
-        </script>
 
-    </body>
+          <!-- Navigation Bar Header -->
+          <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#custom-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="${createLink(controller:'dashboard', action: 'landingPage')}"><g:message code="client.name.label"/></a>
+          </div>
+
+          <!-- Navigation Bar Menu -->
+          <div class="collapse navbar-collapse" id="custom-collapse">
+            <g:render template="/shared/navbar"/>
+          </div>
+
+        </div>
+      </nav>
+
+      <!-- Content -->
+      <div class="main">
+        <g:layoutBody />
+      </div>
+
+      <!-- Footer -->      
+      <g:render template="/shared/footer"/>
+
+    </main>
+  </body>
 </html>

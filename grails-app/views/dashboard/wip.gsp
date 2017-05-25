@@ -72,7 +72,6 @@
   </head>
   <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
     <main>
-      <!-- Loader -->
       <div class="page-loader">
         <div class="loader">Loading...</div>
       </div>
@@ -94,114 +93,16 @@
         </div>
       </nav>
 
-      <!-- Slider -->
-      <section class="home-section home-fade home-full-height" id="home">
-        <div class="hero-slider">
-          <ul class="slides">
-
-            <li class="bg-dark-30 bg-dark shop-page-header" style="background-image:url(&quot;../assets/images/shop/cover5.png&quot;);">
-              <div class="titan-caption">
-                <div class="caption-content">
-                  <div class="font-alt mb-30 titan-title-size-1"><g:message code="client.name.label"/></div>
-                  <div class="font-alt mb-40 titan-title-size-4">Exclusive products</div><a class="section-scroll btn btn-border-w btn-round" href="#latest">Learn More</a>
-                </div>
-              </div>
-            </li>
-
-            <li class="bg-dark-30 bg-dark shop-page-header" style="background-image:url(&quot;../assets/images/shop/cover6.png&quot;);">
-              <div class="titan-caption">
-                <div class="caption-content">
-                  <div class="font-alt mb-30 titan-title-size-1"><g:message code="client.name.label"/></div>
-                  <div class="font-alt mb-30 titan-title-size-4">2017</div>
-                  <div class="font-alt mb-40 titan-title-size-1">Your online gift destination</div><a class="section-scroll btn btn-border-w btn-round" href="#latest">Learn More</a>
-                </div>
-              </div>
-            </li>
-
-          </ul>
+      <section class="home-section home-parallax home-fade home-full-height bg-dark bg-dark-30" id="home" data-background="../assets/images/wip.jpg">
+        <div class="titan-caption">
+          <div class="caption-content">
+            <div class="font-alt mb-30 titan-title-size-4">Coming Soon</div>
+            <div class="font-alt">This feature is currently under development.<br/>
+            </div>
+            <div class="font-alt mt-30"><a class="btn btn-border-w btn-round" href="${createLink(action: 'landingPage', controller:'dashboard')}">Back to home page</a></div>
+          </div>
         </div>
       </section>
-
-      <!-- Content -->
-      <div class="main">
-        <section class="module-small">
-          <div class="container">
-            <!-- Header -->
-            <div class="row">
-              <div class="col-sm-6 col-sm-offset-3">
-                <h2 class="module-title font-alt">Latest in Store</h2>
-              </div>
-            </div>
-            <!-- Item -->
-            <div class="row multi-columns-row">
-
-              <g:each var="hamper" in="${hampers}">
-                <div class="col-sm-6 col-md-3 col-lg-3">
-                  <div class="shop-item">
-                    <div class="shop-item-image">
-
-                      <!-- Image -->
-                      <img src="${createLink(action: 'renderImage', controller:'image', params: [id: hamper.image.generatedName])}" style="min-height: 250px; max-height: 250px;"/>
-                      <!-- On Hover -->
-                      <div class="shop-item-detail">
-                        <a class="btn btn-round btn-b" href="${createLink(action: 'view', controller:'dashboard', params: [id: hamper.id])}">View Details</a>
-                      </div>
-                    </div>
-                    <!-- Detail -->
-                    <h4 class="shop-item-title font-alt"><a href="${createLink(action: 'view', controller:'dashboard', params: [id: hamper.id])}">${hamper.name}</a></h4>RM ${hamper.price}
-
-                  </div>
-                </div>
-              </g:each>
-
-            </div>
-            <!-- Bottom -->
-            <div class="row mt-30">
-              <div class="col-sm-12 align-center">
-                <a class="btn btn-b btn-round" href="${createLink(action: 'list', controller:'dashboard')}">See all products</a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Content 2 -->
-        <section class="module">
-          <div class="container">
-
-            <div class="row">
-              <div class="col-sm-6 col-sm-offset-3">
-                <h2 class="module-title font-alt">Exclusive products</h2>
-                <div class="module-subtitle font-serif">The languages only differ in their grammar, their pronunciation and their most common words.</div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="owl-carousel text-center" data-items="5" data-pagination="false" data-navigation="false">
-
-                <g:each var="exclusiveHamper" in="${exclusiveHampers}">
-                  <div class="owl-item">
-                    <div class="col-sm-12">
-                      <div class="ex-product">
-                        <a href="${createLink(action: 'view', controller:'dashboard', params: [id: exclusiveHamper.id])}">
-                          <img src="${createLink(action: 'renderImage', controller:'image', params: [id: exclusiveHamper.image.generatedName])}"/>
-                        </a>
-                        <h4 class="shop-item-title font-alt">
-                          <a href="${createLink(action: 'view', controller:'dashboard', params: [id: exclusiveHamper.id])}">
-                            ${exclusiveHamper.name}
-                          </a>
-                        </h4>
-                        RM ${exclusiveHamper.price}
-                      </div>
-                    </div>
-                  </div>
-                </g:each>
-
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
 
       <!-- Footer -->      
       <g:render template="/shared/footer"/>

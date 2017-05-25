@@ -6,14 +6,14 @@ import com.tkm.PendingStatus
 
 class Image implements Serializable, IEntity {
 
-    Long id
     String name
+    String generatedName
     String path
     String type
 
     // IEntity
     EntityStatus status = EntityStatus.ACTIVE
-    PendingStatus pendingStatus
+    PendingStatus pendingStatus = PendingStatus.PENDING_NONE
     Date dateCreated
     Date lastUpdated
     String createdBy = '_SYSTEM_'
@@ -21,17 +21,17 @@ class Image implements Serializable, IEntity {
 
     static mapping = {
         table 'IMAGE'
-        id generator:'sequence', params: [sequence: 'IMAGE_SEQ']
     }
 
     static constraints = {
         name(size: 1..100)
+        generatedName(size: 1..1000)
         path(size: 1..200)
         type(nullable: true)
 
         // IEntity
         status()
-        pendingStatus(nullable: true)
+        pendingStatus()
         dateCreated()
         lastUpdated()
         createdBy(size: 1..50)

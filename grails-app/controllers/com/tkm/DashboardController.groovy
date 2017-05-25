@@ -9,9 +9,7 @@ class DashboardController {
 
     def index() {
         try {
-            def hampers = searchHampers()
-
-            [ hampers: hampers ]
+            redirect(action: "landingPage")
         }
         catch (Exception ex) {
             log.error("index() failed: ${ex.message}", ex)
@@ -94,11 +92,78 @@ class DashboardController {
 
     def landingPage() {
         try {
-            log.info ">>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            render (view: "landingPage")
+            def searchContext = new SearchContext()
+
+            searchContext.order = "desc"
+            searchContext.sort = "dateCreated"
+            searchContext.max = 8
+
+            def rsp = hamperService.search(searchContext)
+            def hampers = rsp.results
+
+            //Exclusive products
+            searchContext = new SearchContext()
+
+            searchContext.order = "asc"
+            searchContext.sort = "dateCreated"
+            searchContext.max = 8
+
+            def exclusiveHampers = hamperService.search(searchContext).results
+
+            [ hampers: hampers, exclusiveHampers: exclusiveHampers ]
         }
         catch (Exception ex) {
             log.error("landingPage() failed: ${ex.message}", ex)
+        }
+    }
+
+    def view(Long id) {
+        try {
+            def rsp = hamperService.getHamperById(id)
+            def hamper = rsp.result
+
+            //Get related products
+            //TODO: Improve
+            def searchContext = new SearchContext()
+
+            searchContext.order = "desc"
+            searchContext.sort = "dateCreated"
+            searchContext.max = 8
+
+            def relatedHampers = hamperService.search(searchContext).results
+
+            [ hamper: hamper, relatedHampers: relatedHampers ]
+        }
+        catch (Exception ex) {
+            log.error("view() failed: ${ex.message}", ex)
+        }
+    }
+
+    def list() {
+        try{
+            def hampers = searchHampers()
+
+            [ hampers: hampers ]
+        }
+        catch (Exception ex) {
+            log.error("list() failed: ${ex.message}", ex)
+        }
+    }
+
+    def wip() {
+        try{
+        }
+        catch (Exception ex) {
+            log.error("wip() failed: ${ex.message}", ex)
+        }
+    }
+
+    def test() {
+        try{
+
+        }
+        catch (Exception ex) {
+            log.error("test() failed: ${ex.message}", ex)
         }
     }
 }

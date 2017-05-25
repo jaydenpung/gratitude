@@ -64,6 +64,7 @@ class ImageService {
 
             def image = new Image(
                 name: oriName,
+                generatedName: generatedImageName,
                 path: imagePath
             ).save(flush: true, failOnError: true)
 
@@ -112,6 +113,7 @@ class ImageService {
 
             def image = new Image(
                 name: generatedImageName,
+                generatedName: generatedImageName,
                 path: destinationFilePath
             ).save(flush: true, failOnError: true)
 
