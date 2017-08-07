@@ -32,4 +32,7 @@
     <li><a href="${createLink(action: 'logout', controller:'login')}">Logout</a>
   </sec:ifLoggedIn>
 
+    <li><a href="#" onclick="(function(){ $('#cartModal').modal('show') })()"><i class="fa fa-fw">&#xF07A;</i></a></li>
+    
+
 </ul>

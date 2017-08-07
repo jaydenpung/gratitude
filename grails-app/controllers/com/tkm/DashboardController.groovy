@@ -58,6 +58,7 @@ class DashboardController {
     def getCartList() {
         try {
             def shoppingItems = shoppingCartService.getItems()
+
             def rsp
             if (shoppingItems) {
                 rsp = hamperService.getHampersInCart(shoppingItems.id)
@@ -71,7 +72,7 @@ class DashboardController {
                 def quantity = shoppingCartService.getQuantity(hamper).value
                 products << [
                     id: hamper.id,
-                    imagePath: hamper.image.path,
+                    imageGeneratedName: hamper.image.generatedName,
                     name: hamper.name,
                     shortDescription: hamper.shortDescription,
                     quantity: hamper.quantity,
@@ -155,6 +156,68 @@ class DashboardController {
         }
         catch (Exception ex) {
             log.error("wip() failed: ${ex.message}", ex)
+        }
+    }
+
+    def addToCart() {
+        def result
+        try {
+            def hamperId = params.long('id')
+            def quantity = params.int('quantity')?: 1
+
+            def hamperRsp = hamperService.getHamperById(hamperId)
+            def hamper = hamperRsp.result
+
+            def rsp = shoppingCartService.addToShoppingCart(hamper, quantity)
+            result = rsp.items
+        }
+        catch (Exception ex) {
+            log.error("addToCart() failed: ${ex.message}", ex)
+        }
+        render result
+    }
+
+    def removeFromCart() {
+        def result
+        try {
+            def hamperId = params.long('id')
+            def quantity = params.int('quantity')?: 1
+
+            def hamperRsp = hamperService.getHamperById(hamperId)
+            def hamper = hamperRsp.result
+
+            def rsp = shoppingCartService.removeFromShoppingCart(hamper, quantity)
+            result = rsp.items
+        }
+        catch (Exception ex) {
+            log.error("removeFromCart() failed: ${ex.message}", ex)
+        }
+        render result
+    }
+
+    def setShoppingItemQuantity() {
+        try {
+            def hamperId = params.long('id')
+            def newQuantity = params.int('quantity')
+
+            def hamperRsp = hamperService.getHamperById(hamperId)
+            def hamper = hamperRsp.result
+
+            def oldQuantity = shoppingCartService.getQuantity(hamper)
+            def quantity = newQuantity - oldQuantity
+            def rsp
+            if (quantity > 0) {
+                rsp = shoppingCartService.addToShoppingCart(hamper, quantity)
+            }
+            else {
+                quantity = -quantity
+                rsp = shoppingCartService.removeFromShoppingCart(hamper, quantity)
+            }
+
+            render quantity
+        }
+        catch (Exception ex) {
+            log.error("setShoppingItemQuantity() failed: ${ex.message}", ex)
         }
     }
 

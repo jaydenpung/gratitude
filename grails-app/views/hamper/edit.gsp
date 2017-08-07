@@ -7,7 +7,7 @@
 
     <body>
         <!-- Change link to resource file -->
-        <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
 
         <section class="module-small" style="padding-top: 0px">
             <div class="container">
@@ -94,6 +94,11 @@
 
         <script>
             $(document).ready(function() {
+
+                $("#rawContent").show();
+                $("#editContent").hide();
+                $("#editButton").show();
+                $("#previewButton").hide();
 
                 $('[name=editForm]').bootstrapValidator({
                     excluded: ':disabled',

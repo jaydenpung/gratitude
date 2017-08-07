@@ -20,3 +20,17 @@ function selectAllCheckBox(checkBoxAll, checkBoxes, buttons) {
         }
     });
 }
+
+function refreshSoppingList(ajaxUrl) {
+    var modal = $("#cartModal");
+    var target = $("#cartModalBody");
+
+    $.get(ajaxUrl)
+    .done(function(ajaxData){
+        target.html(ajaxData);
+        modal.modal('show');
+    })
+    .fail(function(){
+        alert("Something went wrong");
+    });
+}

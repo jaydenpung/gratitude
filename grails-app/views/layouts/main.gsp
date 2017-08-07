@@ -81,6 +81,9 @@
         <div class="loader">Loading...</div>
       </div>
 
+      <!-- Cart Modal -->
+      <g:render template="/shared/cartModal"/>
+
       <!-- Navigation Bar -->
       <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
         <div class="container">
@@ -107,5 +110,15 @@
       <g:render template="/shared/footer"/>
 
     </main>
+
+    <script>
+        $(document).ready(function(){
+            $('#cartModal').on('shown.bs.modal', function() {
+                var ajaxUrl = "${createLink(controller: 'dashboard', action: 'getCartList')};"
+                refreshSoppingList(ajaxUrl);
+            });
+        });
+    </script>
+
   </body>
 </html>

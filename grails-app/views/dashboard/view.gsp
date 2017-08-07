@@ -4,6 +4,9 @@
     <meta name="layout" content="main2" />
   </head>
   <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
+
+    <input type="hidden" value="${hamper.id}" id="id">
+
     <main>
       <div class="main">
 
@@ -64,9 +67,9 @@
 
                 <div class="row mb-20">
                   <div class="col-sm-4 mb-sm-20">
-                    <input class="form-control input-lg" type="number" name="" value="1" max="40" min="1" required="required"/>
+                    <input id="quantity" class="form-control input-lg" type="number" name="" value="1" max="40" min="1" required="required"/>
                   </div>
-                  <div class="col-sm-8"><a class="btn btn-lg btn-block btn-round btn-b" href="#">Add To Cart</a></div>
+                  <div class="col-sm-8"><button class="btn btn-lg btn-block btn-round btn-b" id="addCartBtn">Add To Cart</button></div>
                 </div>
 
                 <div class="row mb-20">
@@ -210,7 +213,7 @@
                             ${relatedHamper.name}
                           </a>
                         </h4>
-                        RM {relatedHamper.price}
+                        RM ${relatedHamper.price}
                       </div>
                     </div>
                   </div>
@@ -223,5 +226,20 @@
 
       </div>
     </main>
+
+    <script>
+        $("#addCartBtn").click(function() {
+          $.ajax({
+              url: "${createLink(controller: 'dashboard', action: 'addToCart')}",
+              type: 'POST',
+              data: { id: $("#id").val(), quantity: $("#quantity").val() },
+              success: function(result) {
+                  $('#cartModal').modal('show');
+              }
+          });
+          $("#quantity").val("1");
+        });
+    </script>
+
   </body>
 </html>

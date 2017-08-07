@@ -16,29 +16,19 @@
                 </g:if>
                 <g:else>
                     <g:each var="product" in="${products}">
-                    <tr>
+                    <tr hamperId="${product.id}">
                         <td class="col-sm-2">
-                            <a class="thumbnail pull-left tkmSmallImage" href="${createLink(controller:'hamper', action: 'view', params: [id: product.id])}"> <img src="${resource(file: product.imagePath)}"/> </a>
+                            <a class="thumbnail pull-left tkmSmallImage" href="${createLink(controller:'dashboard', action: 'view', params: [id: product.id])}">
+                                <img src="${createLink(action: 'renderImage', controller:'image', params: [id: product.imageGeneratedName])}"/>
+                            </a>
                         </td>
                         <td class="col-sm-2">
-                            <h4 class="media-heading"><a href="${createLink(controller:'hamper', action: 'view', params: [id: product.id])}">${product.name}</a></h4>
+                            <h4 class="media-heading"><a href="${createLink(controller:'dashboard', action: 'view', params: [id: product.id])}">${product.name}</a></h4>
                             <h5 class="media-heading">${product.shortDescription}</h5>
                             <span>Stock left: </span><span class="text-success"><strong>${product.quantity}</strong></span>
                         </td>
                         <td class="col-sm-2">
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-danger btn-number btn-quantityValue" data-type="minus" data-field="quantity${product.id}" ${product.cartQuantity <= 1?'disabled':''}>
-                                        <span class="glyphicon glyphicon-minus"></span>
-                                    </button>
-                                </span>
-                                <input type="text" id="quantity" name="quantity${product.id}" hamperId="${product.id}" class="form-control input-number quantityValue" min="1" max="${product.quantity}" value="${product.cartQuantity}">
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-success btn-number btn-quantityValue" data-type="plus" data-field="quantity${product.id}" ${product.cartQuantity >= product.quantity?'disabled':''}>
-                                        <span class="glyphicon glyphicon-plus"></span>
-                                    </button>
-                                </span>
-                            </div>
+                            <input class="quantityValue" class="form-control input-lg" type="number" name="" value="${product.cartQuantity}" max="40" min="1" required="required"/>
                         </td>
                         <td class="col-sm-2 text-center text-nowrap">
                             <strong>RM ${product.price}</strong>
@@ -94,10 +84,10 @@
         $(".removeCartBtn").click(function() {
             var row = $(this).closest("tr");
             var quantity = row.find(".quantityValue").val();
-            var hamperId = $(this).attr('hamperId');
+            var hamperId = row.attr('hamperId');
 
             $.ajax({
-                url: "${createLink(controller: 'hamper', action: 'removeFromCart')}",
+                url: "${createLink(controller: 'dashboard', action: 'removeFromCart')}",
                 type: 'POST',
                 data: { id: hamperId, quantity: quantity },
                 success: function(result) {
@@ -107,67 +97,27 @@
             });
         });
 
-        $('.btn-quantityValue').click(function(e){
-            e.preventDefault();
-
-            fieldName = $(this).attr('data-field');
-            type      = $(this).attr('data-type');
-            var input = $("input[name='"+fieldName+"']");
-            var currentVal = parseInt(input.val());
-            if (!isNaN(currentVal)) {
-                if (type == 'minus') {
-
-                    if (currentVal > input.attr('min')) {
-                        input.val(currentVal - 1).change();
-                    }
-                    if (parseInt(input.val()) == input.attr('min')) {
-                        $(this).attr('disabled', true);
-                    }
-
-                } else if (type == 'plus') {
-
-                    if (currentVal < input.attr('max')) {
-                        input.val(currentVal + 1).change();
-                    }
-                    if (parseInt(input.val()) == input.attr('max')) {
-                        $(this).attr('disabled', true);
-                    }
-
-                }
-            } else {
-                input.val(0);
-            }
-        });
-
-        $('.quantityValue').focusin(function(){
-           $(this).data('oldValue', $(this).val());
-        });
-
+        var t;
         $('.quantityValue').change(function() {
-            minValue =  parseInt($(this).attr('min'));
-            maxValue =  parseInt($(this).attr('max'));
-            valueCurrent = parseInt($(this).val());
-
-            name = $(this).attr('name');
-
-            if (valueCurrent >= minValue) {
-                $(".btn-quantityValue[data-type='minus'][data-field='"+name+"']").removeAttr('disabled');
-            } else {
-                alert('Sorry, the minimum value was reached');
-                $(this).val($(this).data('oldValue'));
+            if ( t )
+            {
+                clearTimeout( t );
+                t = setTimeout( myCallback.bind(this), 1000 );
             }
-            if (valueCurrent <= maxValue) {
-                $(".btn-quantityValue[data-type='plus'][data-field='"+name+"']").removeAttr('disabled');
-            } else {
-                alert('Sorry, the maximum value was reached');
-                $(this).val($(this).data('oldValue'));
-            }
+            else
+            {
+                t = setTimeout( myCallback.bind(this), 1000 );
+            }           
+        });
 
-            var hamperId = $(this).attr('hamperId');
-            var quantity = $(this).val();
+        function myCallback()
+        {           
+            var row = $(this).closest("tr");
+            var hamperId = row.attr('hamperId');
+            var quantity = row.find(".quantityValue").val();
 
             $.ajax({
-                url: "${createLink(controller: 'hamper', action: 'setShoppingItemQuantity')}",
+                url: "${createLink(controller: 'dashboard', action: 'setShoppingItemQuantity')}",
                 type: 'POST',
                 data: { id: hamperId, quantity: quantity },
                 success: function(result) {
@@ -175,22 +125,6 @@
                     refreshSoppingList(ajaxUrl);
                 }
             });
-        });
-
-        $(".quantityValue").keydown(function (e) {
-            // Allow: backspace, delete, tab, escape, enter and .
-            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
-                 // Allow: Ctrl+A
-                (e.keyCode == 65 && e.ctrlKey === true) ||
-                 // Allow: home, end, left, right
-                (e.keyCode >= 35 && e.keyCode <= 39)) {
-                     // let it happen, don't do anything
-                     return;
-            }
-            // Ensure that it is a number and stop the keypress
-            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-                e.preventDefault();
-            }
-        });
+        }
     });
 </script>

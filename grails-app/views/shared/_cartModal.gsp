@@ -8,7 +8,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Shopping Cart</h4>
             </div>
-            <div class="modal-body" id="cartModalBody">
+            <div class="modal-body" id="cartModalBody" style="overflow: auto">
             </div>
         </div>
 

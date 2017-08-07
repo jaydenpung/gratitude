@@ -99,7 +99,7 @@
         <div class="hero-slider">
           <ul class="slides">
 
-            <li class="bg-dark-30 bg-dark shop-page-header" style="background-image:url(&quot;../assets/images/shop/cover5.png&quot;);">
+            <li class="bg-dark-30 bg-dark shop-page-header" style="background-image:url('../assets/images/shop/cover5.jpg');">
               <div class="titan-caption">
                 <div class="caption-content">
                   <div class="font-alt mb-30 titan-title-size-1"><g:message code="client.name.label"/></div>
@@ -108,7 +108,7 @@
               </div>
             </li>
 
-            <li class="bg-dark-30 bg-dark shop-page-header" style="background-image:url(&quot;../assets/images/shop/cover6.png&quot;);">
+            <li class="bg-dark-30 bg-dark shop-page-header" style="background-image:url('../assets/images/shop/cover6.png');">
               <div class="titan-caption">
                 <div class="caption-content">
                   <div class="font-alt mb-30 titan-title-size-1"><g:message code="client.name.label"/></div>
@@ -137,20 +137,20 @@
 
               <g:each var="hamper" in="${hampers}">
                 <div class="col-sm-6 col-md-3 col-lg-3">
-                  <div class="shop-item">
-                    <div class="shop-item-image">
 
-                      <!-- Image -->
-                      <img src="${createLink(action: 'renderImage', controller:'image', params: [id: hamper.image.generatedName])}" style="min-height: 250px; max-height: 250px;"/>
-                      <!-- On Hover -->
-                      <div class="shop-item-detail">
-                        <a class="btn btn-round btn-b" href="${createLink(action: 'view', controller:'dashboard', params: [id: hamper.id])}">View Details</a>
+                    <div class="shop-item">
+                      <div class="shop-item-image">
+                        <!-- Image -->
+                        <img src="${createLink(action: 'renderImage', controller:'image', params: [id: hamper.image.generatedName])}" style="min-height: 250px; max-height: 250px;"/>
+                        <!-- On Hover -->
+                        <div class="shop-item-detail">
+                          <a class="btn btn-round btn-b" href="${createLink(action: 'view', controller:'dashboard', params: [id: hamper.id])}">View Details</a>
+                        </div>
                       </div>
-                    </div>
-                    <!-- Detail -->
-                    <h4 class="shop-item-title font-alt"><a href="${createLink(action: 'view', controller:'dashboard', params: [id: hamper.id])}">${hamper.name}</a></h4>RM ${hamper.price}
+                      <!-- Detail -->
+                      <h4 class="shop-item-title font-alt"><a href="${createLink(action: 'view', controller:'dashboard', params: [id: hamper.id])}">${hamper.name}</a></h4>RM ${hamper.price}
 
-                  </div>
+                    </div>
                 </div>
               </g:each>
 

@@ -70,6 +70,7 @@
     <script src="../../assets/lib/simple-text-rotator/jquery.simple-text-rotator.min.js"></script>
     <script src="../../assets/js/plugins.js"></script>
     <script src="../../assets/js/main.js"></script>
+    <script src="../../assets/lib/bootstrapValidator.min.js"></script>
     <asset:javascript src="gratitude.js"/>
 
   </head>
@@ -80,6 +81,9 @@
       <div class="page-loader">
         <div class="loader">Loading...</div>
       </div>
+
+      <!-- Cart Modal -->
+      <g:render template="/shared/cartModal"/>
 
       <!-- Navigation Bar -->
       <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
@@ -107,5 +111,15 @@
       <g:render template="/shared/footer"/>
 
     </main>
+
+    <script>
+        $(document).ready(function(){
+            $('#cartModal').on('shown.bs.modal', function() {
+                var ajaxUrl = "${createLink(controller: 'dashboard', action: 'getCartList')};"
+                refreshSoppingList(ajaxUrl);
+            });
+        });
+    </script>
+
   </body>
 </html>
