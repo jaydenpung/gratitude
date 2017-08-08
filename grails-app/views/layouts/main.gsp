@@ -70,6 +70,7 @@
     <script src="../assets/lib/simple-text-rotator/jquery.simple-text-rotator.min.js"></script>
     <script src="../assets/js/plugins.js"></script>
     <script src="../assets/js/main.js"></script>
+    <script src="../assets/lib/bootstrapValidator.min.js"></script>
     <asset:javascript src="gratitude.js"/>
 
   </head>
