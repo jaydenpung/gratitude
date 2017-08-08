@@ -20,7 +20,6 @@ class Transaction implements Serializable, IEntity {
 
     static mapping = {
         table 'CART'
-        id generator:'sequence', params: [sequence: 'CART_SEQ']
     }
 
     static constraints = {

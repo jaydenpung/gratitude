@@ -21,6 +21,23 @@ function selectAllCheckBox(checkBoxAll, checkBoxes, buttons) {
     });
 }
 
+/**
+ * Toggle buttons based on the checked status the specified checkBoxes.
+ *
+ * buttons    - selector string for buttons to enable if any checkBoxes are checked;
+                 If all the checkBoxes are unchecked, they will be disabled instead.
+ * checkBoxes - selector string for the checkBoxes
+ */
+function toggleButtonsBasedOnCheckBoxes(buttons, checkBoxes) {
+    var anyChecked = $(checkBoxes + ":checked").length > 0;
+    if (anyChecked) {
+      $(buttons).removeAttr('disabled');
+    }
+    else {
+      $(buttons).attr('disabled','disabled');
+    }
+}
+
 function refreshSoppingList(ajaxUrl) {
     var modal = $("#cartModal");
     var target = $("#cartModalBody");

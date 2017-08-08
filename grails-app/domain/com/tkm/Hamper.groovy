@@ -35,7 +35,6 @@ class Hamper implements Serializable, IEntity, IShoppable {
 
     static mapping = {
         table 'HAMPER'
-        id generator:'sequence', params: [sequence: 'HAMPER_SEQ']
         products lazy: false
         description type: 'text'
     }

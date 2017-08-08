@@ -22,7 +22,6 @@ class UserProfile implements Serializable, IEntity {
 
     static mapping = {
         table 'USER_PROFILE'
-        id generator:'sequence', params: [sequence: 'USER_PROFILE_SEQ']
     }
 
     static constraints = {

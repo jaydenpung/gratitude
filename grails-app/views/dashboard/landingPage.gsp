@@ -69,6 +69,7 @@
     <script src="../assets/lib/simple-text-rotator/jquery.simple-text-rotator.min.js"></script>
     <script src="../assets/js/plugins.js"></script>
     <script src="../assets/js/main.js"></script>
+	<asset:javascript src="gratitude.js"/>
   </head>
   <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
     <main>
@@ -76,6 +77,9 @@
       <div class="page-loader">
         <div class="loader">Loading...</div>
       </div>
+	  
+	  <!-- Cart Modal -->
+      <g:render template="/shared/cartModal"/>
 
       <!-- Navigation Bar -->
       <nav class="navbar navbar-custom navbar-fixed-top navbar-transparent" role="navigation">
@@ -205,6 +209,15 @@
 
       <!-- Footer -->      
       <g:render template="/shared/footer"/>
+	  
+	  <script>
+        $(document).ready(function(){
+            $('#cartModal').on('shown.bs.modal', function() {
+                var ajaxUrl = "${createLink(controller: 'dashboard', action: 'getCartList')};"
+                refreshSoppingList(ajaxUrl);
+            });
+        });
+    </script>
 
     </main>
   </body>

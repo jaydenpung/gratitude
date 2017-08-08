@@ -96,16 +96,24 @@ class HamperService {
     def save(Hamper hamper) {
         def rsp = [:]
         try {
-            def products = Product.withCriteria {
-                inList('id', hamper.products.id)
-            }
+		
+			def products;
+			
+			if(hamper.products.id) {
+				products = Product.withCriteria {
+					inList('id', hamper.products.id)
+				}
+			}
 
             def invalidIds = hamper.products?.id - products?.id
             if (invalidIds) {
                 throw new Exception ("Unable to get products with id: ${invalidIds}")
             }
+			
+			if (products) {
+				hamper.products = new TreeSet(products)
+			}
 
-            hamper.products = new TreeSet(products)
             hamper.save(flush: true, failOnError: true)
         }
         catch (Exception ex) {
@@ -126,10 +134,14 @@ class HamperService {
             if (!hamper) {
                 throw new Exception ("Error getting hamper with id: ${updatedHamper.id}")
             }
-
-            def products = Product.withCriteria {
-                inList('id', updatedHamper.products.id)
-            }
+			
+			def products
+			
+			if (updatedHamper.products.id) {
+				products = Product.withCriteria {
+					inList('id', updatedHamper.products.id)
+				}
+			}            
 
             def invalidIds = updatedHamper.products?.id - products?.id
             if (invalidIds) {
@@ -153,7 +165,10 @@ class HamperService {
             hamper.description = updatedHamper.description
             hamper.price = updatedHamper.price
             hamper.quantity = updatedHamper.quantity
-            hamper.products = new TreeSet(products)
+			
+			if (products) {
+				hamper.products = new TreeSet(products)
+			}
 
             hamper.save(flush: true, failOnError: true)
 

@@ -21,7 +21,7 @@ class Product implements Serializable, IEntity {
 
     static mapping = {
         table 'PRODUCT'
-        id generator:'sequence', params: [sequence: 'PRODUCT_SEQ']
+        id generator:'hilo', params: [column: 'id']
     }
 
     static constraints = {
