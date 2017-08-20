@@ -21,7 +21,6 @@ class Product implements Serializable, IEntity {
 
     static mapping = {
         table 'PRODUCT'
-        id generator:'hilo', params: [column: 'id']
     }
 
     static constraints = {

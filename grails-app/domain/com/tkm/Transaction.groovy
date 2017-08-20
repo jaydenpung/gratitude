@@ -4,11 +4,17 @@ import com.tkm.IEntity
 import com.tkm.EntityStatus
 import com.tkm.PendingStatus
 
+import com.metasieve.shoppingcart.ShoppingCart
+import org.grails.paypal.Payment
+
 class Transaction implements Serializable, IEntity {
 
     Long id
     SecUser user
     BigDecimal totalAmount
+    ShoppingCart shoppingCart
+    Payment payment
+    boolean completed = false
 
     // IEntity
     EntityStatus status = EntityStatus.ACTIVE

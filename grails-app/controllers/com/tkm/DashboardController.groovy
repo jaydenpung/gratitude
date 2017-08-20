@@ -221,6 +221,71 @@ class DashboardController {
         }
     }
 
+    def checkout() {
+        try {
+            def shoppingItems = shoppingCartService.getItems()
+
+            def rsp
+            if (shoppingItems) {
+                rsp = hamperService.getHampersInCart(shoppingItems.id)
+            }
+            def hampers = rsp?.results
+
+            def products = []
+
+            hampers.each { hamper ->
+                //TODO: Performance improvement
+                def quantity = shoppingCartService.getQuantity(hamper).value
+                products << [
+                    id: hamper.id,
+                    imageGeneratedName: hamper.image.generatedName,
+                    name: hamper.name,
+                    shortDescription: hamper.shortDescription,
+                    quantity: hamper.quantity,
+                    price: hamper.price,
+                    cartQuantity: quantity,
+                    totalPrice: hamper.price * quantity
+                ]
+            }
+
+            def totalAmount = products.totalPrice.sum()
+
+            [ products: products, totalAmount: totalAmount ]
+        }
+        catch (Exception ex) {
+            log.error("checkout() failed: ${ex.message}", ex)
+        }
+    }
+
+    def getTotal() {
+        try {
+            def shoppingItems = shoppingCartService.getItems()
+
+            def rsp
+            if (shoppingItems) {
+                rsp = hamperService.getHampersInCart(shoppingItems.id)
+            }
+            def hampers = rsp?.results
+
+            def products = []
+
+            hampers.each { hamper ->
+                //TODO: Performance improvement
+                def quantity = shoppingCartService.getQuantity(hamper).value
+                products << [
+                    totalPrice: hamper.price * quantity
+                ]
+            }
+
+            def totalAmount = products.totalPrice.sum()
+
+            render totalAmount
+        }
+        catch (Exception ex) {
+            log.error("getTotal() failed: ${ex.message}", ex)
+        }
+    }
+
     def test() {
         try{
 

@@ -67,9 +67,9 @@
                             </button>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-success">
-                                Checkout <span class="glyphicon glyphicon-play"></span>
-                            </button>
+                            <a class="btn btn-success" href="${createLink(action: 'checkout', controller:'dashboard')}">
+                              Checkout <span class="glyphicon glyphicon-play"></span>
+                            </a>
                         </td>
                     </tr>
                 </g:else>
