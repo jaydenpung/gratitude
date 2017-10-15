@@ -8,13 +8,10 @@
     <input type="hidden" value="${hamper.id}" id="id">
 
     <main>
-      <div class="main">
-
         <!-- Product Card -->
         <section class="module">
           <div class="container">
             <div class="row">
-
               <!-- Images -->
               <div class="col-sm-6 mb-sm-40">
                 <a class="gallery" href="${createLink(action: 'renderImage', controller:'image', params: [id: hamper.image.generatedName])}">
@@ -80,6 +77,8 @@
                 </div>
               </div>
             </div>
+
+            <a class="btn btn-g btn-round" type="submit" href="${createLink(action: 'list', controller:'dashboard')}">Back</a>
 
             <!-- Product Details -->
             <div class="row mt-70">

@@ -1,5 +1,7 @@
 package com.tkm
 
+import grails.util.Environment
+
 import com.tkm.IEntity
 import com.tkm.EntityStatus
 import com.tkm.PendingStatus
@@ -21,6 +23,10 @@ class Product implements Serializable, IEntity {
 
     static mapping = {
         table 'PRODUCT'
+
+        if (Environment.isDevelopmentMode()) {
+            id generator:'sequence', params: [sequence: 'HAMPER_SEQ']
+        }
     }
 
     static constraints = {

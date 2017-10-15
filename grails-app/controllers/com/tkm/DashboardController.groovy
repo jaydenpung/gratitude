@@ -1,11 +1,15 @@
 package com.tkm
 
 import com.tkm.Hamper
+import com.metasieve.shoppingcart.SessionUtils
+import com.metasieve.shoppingcart.ShoppingCart
+import grails.plugin.springsecurity.*
 
 class DashboardController {
 
     def hamperService
-    def shoppingCartService
+    def cartService
+    def springSecurityService
 
     def index() {
         try {
@@ -57,7 +61,7 @@ class DashboardController {
 
     def getCartList() {
         try {
-            def shoppingItems = shoppingCartService.getItems()
+            def shoppingItems = cartService.getItems()
 
             def rsp
             if (shoppingItems) {
@@ -69,7 +73,7 @@ class DashboardController {
 
             hampers.each { hamper ->
                 //TODO: Performance improvement
-                def quantity = shoppingCartService.getQuantity(hamper).value
+                def quantity = cartService.getQuantity(hamper).value
                 products << [
                     id: hamper.id,
                     imageGeneratedName: hamper.image.generatedName,
@@ -168,7 +172,7 @@ class DashboardController {
             def hamperRsp = hamperService.getHamperById(hamperId)
             def hamper = hamperRsp.result
 
-            def rsp = shoppingCartService.addToShoppingCart(hamper, quantity)
+            def rsp = cartService.addToShoppingCart(hamper, quantity)
             result = rsp.items
         }
         catch (Exception ex) {
@@ -186,7 +190,7 @@ class DashboardController {
             def hamperRsp = hamperService.getHamperById(hamperId)
             def hamper = hamperRsp.result
 
-            def rsp = shoppingCartService.removeFromShoppingCart(hamper, quantity)
+            def rsp = cartService.removeFromShoppingCart(hamper, quantity)
             result = rsp.items
         }
         catch (Exception ex) {
@@ -203,15 +207,15 @@ class DashboardController {
             def hamperRsp = hamperService.getHamperById(hamperId)
             def hamper = hamperRsp.result
 
-            def oldQuantity = shoppingCartService.getQuantity(hamper)
+            def oldQuantity = cartService.getQuantity(hamper)
             def quantity = newQuantity - oldQuantity
             def rsp
             if (quantity > 0) {
-                rsp = shoppingCartService.addToShoppingCart(hamper, quantity)
+                rsp = cartService.addToShoppingCart(hamper, quantity)
             }
             else {
                 quantity = -quantity
-                rsp = shoppingCartService.removeFromShoppingCart(hamper, quantity)
+                rsp = cartService.removeFromShoppingCart(hamper, quantity)
             }
 
             render quantity
@@ -223,7 +227,7 @@ class DashboardController {
 
     def checkout() {
         try {
-            def shoppingItems = shoppingCartService.getItems()
+            def shoppingItems = cartService.getItems()
 
             def rsp
             if (shoppingItems) {
@@ -235,7 +239,7 @@ class DashboardController {
 
             hampers.each { hamper ->
                 //TODO: Performance improvement
-                def quantity = shoppingCartService.getQuantity(hamper).value
+                def quantity = cartService.getQuantity(hamper).value
                 products << [
                     id: hamper.id,
                     imageGeneratedName: hamper.image.generatedName,
@@ -259,7 +263,7 @@ class DashboardController {
 
     def getTotal() {
         try {
-            def shoppingItems = shoppingCartService.getItems()
+            def shoppingItems = cartService.getItems()
 
             def rsp
             if (shoppingItems) {
@@ -271,7 +275,7 @@ class DashboardController {
 
             hampers.each { hamper ->
                 //TODO: Performance improvement
-                def quantity = shoppingCartService.getQuantity(hamper).value
+                def quantity = cartService.getQuantity(hamper).value
                 products << [
                     totalPrice: hamper.price * quantity
                 ]
@@ -292,6 +296,62 @@ class DashboardController {
         }
         catch (Exception ex) {
             log.error("test() failed: ${ex.message}", ex)
+        }
+    }
+
+    def transferShoppingCart() {
+        try{
+            String previousSessionId = params.previousSessionId
+
+            def shoppingCart = ShoppingCart.findBySessionIDAndCheckedOut(previousSessionId, false)
+            def userShoppingCart
+
+            if (springSecurityService.isLoggedIn()) {
+                userShoppingCart = ShoppingCart.findBySessionIDAndCheckedOut(springSecurityService.getPrincipal().username, false)
+            }
+
+            if (shoppingCart && userShoppingCart) {
+                if (shoppingCart.items.size() > 0) {
+
+                    cartService.emptyShoppingCart(userShoppingCart)
+                    userShoppingCart.delete(flush: true)
+
+                    shoppingCart.sessionID = springSecurityService.getPrincipal().username
+                    shoppingCart.save(flush: true, failOnError: true)
+                }
+                else {
+                    //do nothing
+                }
+            }
+            else if (shoppingCart && !userShoppingCart) {                
+                shoppingCart.sessionID = springSecurityService.getPrincipal().username;
+                shoppingCart.save(flush: true, failOnError: true)
+            }
+            else if (!shoppingCart && userShoppingCart) {
+                //do nothing
+            }
+            else {
+                //do nothing
+            }
+
+            render (true)
+        }
+        catch (Exception ex) {
+            log.error("transferShoppingCart() failed: ${ex.message}", ex)
+        }
+    }
+
+    def proceed() {
+        try {
+            if (springSecurityService.isLoggedIn()) {
+
+            }
+            else {
+                redirect (controller: 'login', action: 'auth')
+            }
+        }
+        catch (Exception ex) {
+            log.error("checkout() failed: ${ex.message}", ex)
         }
     }
 }

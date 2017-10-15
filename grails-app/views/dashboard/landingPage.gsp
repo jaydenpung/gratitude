@@ -216,6 +216,23 @@
                 var ajaxUrl = "${createLink(controller: 'dashboard', action: 'getCartList')};"
                 refreshSoppingList(ajaxUrl);
             });
+
+            $.ajax({
+              url: "${createLink(controller: 'dashboard', action: 'transferShoppingCart')}",
+              type: 'POST',
+              data: { previousSessionId: localStorage.getItem("previousSessionId") },
+              success: function(result) {
+                localStorage.removeItem("previousSessionId");
+              },
+              error: function(result) {
+              }
+            });
+
+            if (localStorage.getItem("paying") == "true") {
+              localStorage.removeItem("paying");
+              window.location.href="${createLink(controller: 'dashboard', action: 'checkout')}";
+            }
+
         });
     </script>
 

@@ -10,7 +10,7 @@ class HamperController {
     def hamperService
     def imageService
     def grailsApplication
-    def shoppingCartService
+    def cartService
 
     def list() {
         try {
@@ -211,7 +211,7 @@ class HamperController {
             def hamperRsp = hamperService.getHamperById(hamperId)
             def hamper = hamperRsp.result
 
-            def rsp = shoppingCartService.addToShoppingCart(hamper, quantity)
+            def rsp = cartService.addToShoppingCart(hamper, quantity)
             result = rsp.items
         }
         catch (Exception ex) {
@@ -229,7 +229,7 @@ class HamperController {
             def hamperRsp = hamperService.getHamperById(hamperId)
             def hamper = hamperRsp.result
 
-            def rsp = shoppingCartService.removeFromShoppingCart(hamper, quantity)
+            def rsp = cartService.removeFromShoppingCart(hamper, quantity)
             result = rsp.items
         }
         catch (Exception ex) {
@@ -246,15 +246,15 @@ class HamperController {
             def hamperRsp = hamperService.getHamperById(hamperId)
             def hamper = hamperRsp.result
 
-            def oldQuantity = shoppingCartService.getQuantity(hamper)
+            def oldQuantity = cartService.getQuantity(hamper)
             def quantity = newQuantity - oldQuantity
             def rsp
             if (quantity > 0) {
-                rsp = shoppingCartService.addToShoppingCart(hamper, quantity)
+                rsp = cartService.addToShoppingCart(hamper, quantity)
             }
             else {
                 quantity = -quantity
-                rsp = shoppingCartService.removeFromShoppingCart(hamper, quantity)
+                rsp = cartService.removeFromShoppingCart(hamper, quantity)
             }
 
             render quantity

@@ -69,7 +69,7 @@
           </div>
 
           <%-- Coupon --%>
-          <div class="row">
+          <%-- <div class="row">
             <div class="col-sm-3">
               <div class="form-group">
                 <input class="form-control" type="text" id="" name="" placeholder="Coupon code"/>
@@ -85,7 +85,7 @@
                 <button class="btn btn-block btn-round btn-d pull-right" type="submit">Update Cart</button>
               </div>
             </div>
-          </div>
+          </div> --%>
 
           <%-- Total and Subtotals --%>
           <hr class="divider-w">
@@ -110,7 +110,13 @@
                   </tbody>
                 </table>
 
-                <button class="btn btn-lg btn-block btn-round btn-d" type="submit">Proceed to Checkout</button>
+                <sec:ifLoggedIn>
+                  <a class="btn btn-lg btn-block btn-round btn-d">Proceed to Payment</a>
+                </sec:ifLoggedIn>
+
+                <sec:ifNotLoggedIn>
+                  <a class="btn btn-lg btn-block btn-round btn-d" id="btnProceed">Proceed to Login / Register</a>
+                </sec:ifNotLoggedIn>
                 
               </div>
             </div>
@@ -134,8 +140,7 @@
                     type: 'POST',
                     data: { id: hamperId, quantity: quantity },
                     success: function(result) {
-                        var ajaxUrl = "${createLink(controller: 'dashboard', action: 'getCartList')};"
-                        refreshSoppingList(ajaxUrl);
+                      location.reload();
                     }
                 });
             });
@@ -182,6 +187,11 @@
                     }
                 });
             }
+
+            $("#btnProceed").click(function() {
+              window.location.href = "${createLink(controller: 'login', action: 'auth')}";
+              localStorage.setItem("paying", "true");
+            });
         });
     </script>
   </body>

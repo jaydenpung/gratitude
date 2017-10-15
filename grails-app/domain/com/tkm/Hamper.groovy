@@ -2,6 +2,7 @@ package com.tkm
 
 import com.metasieve.shoppingcart.IShoppable
 import com.metasieve.shoppingcart.ShoppingItem
+import grails.util.Environment
 
 import com.tkm.IEntity
 import com.tkm.EntityStatus
@@ -37,6 +38,10 @@ class Hamper implements Serializable, IEntity, IShoppable {
         table 'HAMPER'
         products lazy: false
         description type: 'text'
+
+        if (Environment.isDevelopmentMode()) {
+            id generator:'sequence', params: [sequence: 'HAMPER_SEQ']
+        }
     }
 
     static constraints = {

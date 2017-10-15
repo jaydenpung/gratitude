@@ -6,6 +6,7 @@ import com.tkm.PendingStatus
 
 import com.metasieve.shoppingcart.ShoppingCart
 import org.grails.paypal.Payment
+import grails.util.Environment
 
 class Transaction implements Serializable, IEntity {
 
@@ -26,6 +27,10 @@ class Transaction implements Serializable, IEntity {
 
     static mapping = {
         table 'CART'
+
+        if (Environment.isDevelopmentMode()) {
+            id generator:'sequence', params: [sequence: 'HAMPER_SEQ']
+        }
     }
 
     static constraints = {
