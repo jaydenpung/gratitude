@@ -98,16 +98,12 @@
                     <table class="table table-striped ds-table table-responsive">
                       <tbody>
                         <tr>
-                          <th>Title</th>
-                          <th>Info</th>
+                          <th>Name</th>
+                          <th>${hamper.name}</th>
                         </tr>
                         <tr>
-                          <td>Size</td>
-                          <td>44, 46, 48</td>
-                        </tr>
-                        <tr>
-                          <td>Color</td>
-                          <td>Black</td>
+                          <td>Stock Left</td>
+                          <td>${hamper.quantity}</td>
                         </tr>
                       </tbody>
                     </table>

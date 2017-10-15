@@ -5,7 +5,6 @@ import com.tkm.EntityStatus
 import com.tkm.PendingStatus
 
 import com.metasieve.shoppingcart.ShoppingCart
-import org.grails.paypal.Payment
 import grails.util.Environment
 
 class Transaction implements Serializable, IEntity {
@@ -14,22 +13,20 @@ class Transaction implements Serializable, IEntity {
     SecUser user
     BigDecimal totalAmount
     ShoppingCart shoppingCart
-    Payment payment
-    boolean completed = false
 
     // IEntity
     EntityStatus status = EntityStatus.ACTIVE
-    PendingStatus pendingStatus
+    PendingStatus pendingStatus = PendingStatus.PENDING_CONFIRM
     Date dateCreated
     Date lastUpdated
     String createdBy = '_SYSTEM_'
     String updatedBy = '_SYSTEM_'
 
     static mapping = {
-        table 'CART'
+        table 'TRANSACTION'
 
         if (Environment.isDevelopmentMode()) {
-            id generator:'sequence', params: [sequence: 'HAMPER_SEQ']
+            id generator:'sequence', params: [sequence: 'TRANSACTION_SEQ']
         }
     }
 

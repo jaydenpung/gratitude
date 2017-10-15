@@ -12,10 +12,12 @@ class SecUserController {
 	def register() {
         def success = true
         def registerMessage = ""
+        def email = params['email']
+        def password = params['password']
+        def rePassword = params['rePassword']
+            
         try{
-        	def email = params['email']
-        	def password = params['password']
-        	def rePassword = params['rePassword']
+        	
 
         	if (password != rePassword) {
                 registerMessage = "Passwords did not match!"

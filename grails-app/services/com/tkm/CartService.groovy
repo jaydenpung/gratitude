@@ -6,6 +6,7 @@ import grails.plugin.springsecurity.*
 class CartService extends ShoppingCartService {
 
     def springSecurityService
+    def hamperService
 
     @Override
     def createShoppingCart() {
@@ -117,6 +118,9 @@ class CartService extends ShoppingCartService {
 
     @Override
     Set checkOut(ShoppingCart previousShoppingCart = null) {
+
+        def totalAmount = deductItems();
+
         def shoppingCart = getShoppingCart()
         
         def checkedOutItems = []
@@ -129,6 +133,14 @@ class CartService extends ShoppingCartService {
         
         shoppingCart.checkedOut = true
         shoppingCart.save()
+
+        Transaction transaction = new Transaction(
+            user: SecUser.findByUsername(springSecurityService.getPrincipal().username),
+            totalAmount: totalAmount,
+            shoppingCart: shoppingCart
+        )
+
+        transaction.save(flush: true)
         
         return checkedOutItems
     }
@@ -160,5 +172,30 @@ class CartService extends ShoppingCartService {
         def shoppingItem = new ShoppingItem()
         shoppingItem.save()
         return shoppingItem
+    }
+
+    def deductItems() {
+        def shoppingItems = getItems()
+        def totalAmount = 0
+
+        def rsp
+        if (shoppingItems) {
+            rsp = hamperService.getHampersInCart(shoppingItems.id)
+        }
+        def hampers = rsp?.results
+
+        def products = []
+
+        hampers.each { hamper ->
+            //TODO: Performance improvement
+            def quantity = getQuantity(hamper).value
+            products << [
+                totalPrice: hamper.price * quantity
+            ]
+            hamper.quantity -= quantity
+            hamper.save(flush: true)
+        }
+
+        return totalAmount = products.totalPrice.sum()
     }
 }

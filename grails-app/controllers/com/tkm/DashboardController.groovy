@@ -4,6 +4,7 @@ import com.tkm.Hamper
 import com.metasieve.shoppingcart.SessionUtils
 import com.metasieve.shoppingcart.ShoppingCart
 import grails.plugin.springsecurity.*
+import grails.converters.JSON
 
 class DashboardController {
 
@@ -200,6 +201,8 @@ class DashboardController {
     }
 
     def setShoppingItemQuantity() {
+        def result = [:]
+
         try {
             def hamperId = params.long('id')
             def newQuantity = params.int('quantity')
@@ -210,15 +213,26 @@ class DashboardController {
             def oldQuantity = cartService.getQuantity(hamper)
             def quantity = newQuantity - oldQuantity
             def rsp
-            if (quantity > 0) {
-                rsp = cartService.addToShoppingCart(hamper, quantity)
+
+            if (newQuantity > hamper.quantity) {
+                result.success = false
+                result.quantity = oldQuantity
             }
             else {
-                quantity = -quantity
-                rsp = cartService.removeFromShoppingCart(hamper, quantity)
+
+                if (quantity > 0) {
+                    rsp = cartService.addToShoppingCart(hamper, quantity)
+                }
+                else {
+                    quantity = -quantity
+                    rsp = cartService.removeFromShoppingCart(hamper, quantity)
+                }
+
+                result.success = true
+                result.quantity = quantity
             }
 
-            render quantity
+            render (result as JSON)
         }
         catch (Exception ex) {
             log.error("setShoppingItemQuantity() failed: ${ex.message}", ex)
@@ -283,7 +297,7 @@ class DashboardController {
 
             def totalAmount = products.totalPrice.sum()
 
-            render totalAmount
+            render totalAmount.toString()
         }
         catch (Exception ex) {
             log.error("getTotal() failed: ${ex.message}", ex)
@@ -351,7 +365,17 @@ class DashboardController {
             }
         }
         catch (Exception ex) {
-            log.error("checkout() failed: ${ex.message}", ex)
+            log.error("proceed() failed: ${ex.message}", ex)
+        }
+    }
+
+    def completePayment() {
+        try {
+            def cart = cartService.getShoppingCart()
+            cartService.checkOut(cart);
+        }
+        catch (Exception ex) {
+            log.error("completePayment() failed: ${ex.message}", ex)
         }
     }
 }

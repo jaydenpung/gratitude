@@ -4,6 +4,7 @@
     <meta name="layout" content="main" />
   </head>
   <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
     <main>
       <div class="main">
         <div class="container">
@@ -111,7 +112,7 @@
                 </table>
 
                 <sec:ifLoggedIn>
-                  <a class="btn btn-lg btn-block btn-round btn-d">Proceed to Payment</a>
+                  <div id="paypal-button-container"></div>
                 </sec:ifLoggedIn>
 
                 <sec:ifNotLoggedIn>
@@ -129,6 +130,14 @@
 
     <script>
         $(document).ready(function(){
+
+            $.ajax({
+                url: "${createLink(controller: 'dashboard', action: 'getTotal')}",
+                type: 'POST',
+                success: function(result) {
+                  paypalPayment(result);
+                }
+            });
 
             $(".removeCartBtn").click(function() {
                 var row = $(this).closest("tr");
@@ -170,9 +179,13 @@
                     type: 'POST',
                     data: { id: hamperId, quantity: quantity },
                     success: function(result) {
-                        row.find(".totalPrice").html('<strong> RM ' + (price * quantity).toFixed(2) + '</strong>');
-
-                        updateTotal();
+                        if (result.success == true) {
+                          row.find(".totalPrice").html('<strong> RM ' + (price * quantity).toFixed(2) + '</strong>');
+                          updateTotal();
+                        }
+                        else {
+                          row.find(".quantityValue").val(result.quantity);
+                        }
                     }
                 });
             }
@@ -192,6 +205,65 @@
               window.location.href = "${createLink(controller: 'login', action: 'auth')}";
               localStorage.setItem("paying", "true");
             });
+
+            function paypalPayment(totalAmount) {
+              paypal.Button.render({
+
+                // Set your environment
+
+                env: 'sandbox', // sandbox | production
+
+                // Specify the style of the button
+
+                style: {
+                    label: 'pay',
+                    size:  'responsive', // small | medium | large | responsive
+                    shape: 'rect',   // pill | rect
+                    color: 'gold'   // gold | blue | silver | black
+                },
+
+                // PayPal Client IDs - replace with your own
+                // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+
+                client: {
+                    sandbox:    'AVV9NKQph2T_WuxzwIQ8OnJAtBMqWJPY8UxISREd2oSd4KyvcFeMXKMWf3R1zB5sFmKaRiifvrn7Sgd-',
+                    production: 'AXa6lkJFgvRSfNoDqQMi4r_LvRT9r1Qbn0bODK5SX2yBIivGbwCJnzwhKhQ-lLOjePf4yTOl2ZHIGwXZ'
+                },
+
+                // Wait for the PayPal button to be clicked
+
+                payment: function(data, actions) {
+                    return actions.payment.create({
+                        payment: {
+                            transactions: [
+                                {
+                                    amount: { total: totalAmount, currency: 'MYR' }
+                                }
+                            ]
+                        }
+                    });
+                },
+
+                // Wait for the payment to be authorized by the customer
+
+                onAuthorize: function(data, actions) {
+                    return actions.payment.execute().then(function() {
+                        window.alert('Payment Complete!');
+                        completePayment();
+                    });
+                }
+
+                }, '#paypal-button-container');
+            }
+
+            function completePayment() {
+              $.ajax({
+                  url: "${createLink(controller: 'dashboard', action: 'completePayment')}",
+                  type: 'POST',
+                  success: function(result) {
+                  }
+              });
+            }
         });
     </script>
   </body>

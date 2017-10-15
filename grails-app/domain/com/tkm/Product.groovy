@@ -25,7 +25,7 @@ class Product implements Serializable, IEntity {
         table 'PRODUCT'
 
         if (Environment.isDevelopmentMode()) {
-            id generator:'sequence', params: [sequence: 'HAMPER_SEQ']
+            id generator:'sequence', params: [sequence: 'PRODUCT_SEQ']
         }
     }
 
