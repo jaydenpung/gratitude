@@ -172,7 +172,6 @@
 			});
 
 			$("#btnRegister").click(function() {
-				console.log('haha');
 				if ($('[name=registerForm]').data('bootstrapValidator').validate().isValid()) {
 
 					$.ajax({

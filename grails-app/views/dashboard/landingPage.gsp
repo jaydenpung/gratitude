@@ -230,15 +230,17 @@
               data: { previousSessionId: localStorage.getItem("previousSessionId") },
               success: function(result) {
                 localStorage.removeItem("previousSessionId");
+
+                if (localStorage.getItem("paying") == "true") {
+                  localStorage.removeItem("paying");
+                  window.location.href="${createLink(controller: 'dashboard', action: 'checkout')}";
+                }
               },
               error: function(result) {
               }
             });
 
-            if (localStorage.getItem("paying") == "true") {
-              localStorage.removeItem("paying");
-              window.location.href="${createLink(controller: 'dashboard', action: 'checkout')}";
-            }
+            
 
         });
     </script>
