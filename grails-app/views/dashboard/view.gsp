@@ -5,6 +5,12 @@
   </head>
   <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
 
+    <style>
+      .footer {
+        position: relative;
+      }
+    </style>
+
     <input type="hidden" value="${hamper.id}" id="id">
 
     <main>

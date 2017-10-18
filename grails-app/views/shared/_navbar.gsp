@@ -24,17 +24,22 @@
     </li>
   </sec:ifAllGranted>
 
-  <li><a href="${createLink(action: 'wip', controller:'dashboard')}">About Us</a>
   <li><a href="${createLink(action: 'wip', controller:'dashboard')}">Contact Us</a>
 
   <sec:ifNotLoggedIn>
     <li><a href="${createLink(action: 'auth', controller:'login')}">Login</a>
   </sec:ifNotLoggedIn>
+
   <sec:ifLoggedIn>
-    <li><a href="${createLink(action: 'logout', controller:'login')}">Logout</a>
+    <li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">My Account</a>
+      <ul class="dropdown-menu">
+        <li><a href="${createLink(action: 'list', controller:'account')}">My Orders</a></li>
+        <li><a href="${createLink(action: 'logout', controller:'login')}">Logout</a></li>
+      </ul>
+    </li>
   </sec:ifLoggedIn>
 
-    <li><a href="#" onclick="(function(){ $('#cartModal').modal('show') })()"><i class="fa fa-fw">&#xF07A;</i></a></li>
+  <li><a href="#" id="cartBtn" onclick="(function(){ $('#cartModal').modal('show') })()"><i class="fa fa-fw">&#xF07A;</i></a></li>
     
 
 </ul>

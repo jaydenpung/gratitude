@@ -4,6 +4,7 @@ import grails.converters.JSON
 
 import com.tkm.Hamper
 import com.tkm.SearchContext
+import java.text.DecimalFormat
 
 class HamperController {
 
@@ -57,7 +58,7 @@ class HamperController {
                     rows << [
                         id: hamper.id,
                         name: hamper.name,
-                        price: hamper.price,
+                        price: 'RM ' + new DecimalFormat('0.00').format(hamper.price),
                         quantity: hamper.quantity
                     ]
                 }

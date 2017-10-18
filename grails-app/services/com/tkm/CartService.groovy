@@ -2,6 +2,7 @@ package com.tkm
 
 import com.metasieve.shoppingcart.*
 import grails.plugin.springsecurity.*
+import com.tkm.GiftItem
 
 class CartService extends ShoppingCartService {
 
@@ -83,15 +84,7 @@ class CartService extends ShoppingCartService {
         
         return quantity?.value
     }
-
-    @Override
-    def getQuantity(ShoppingItem shoppingItem, ShoppingCart previousShoppingCart = null) {
-        def shoppingCart = getShoppingCart()
-        def quantity = Quantity.findByShoppingCartAndShoppingItem(shoppingCart, shoppingItem)
-        
-        return quantity?.value
-    }
-
+    
     @Override
     def setLastURL(def url, ShoppingCart previousShoppingCart = null) {
         def shoppingCart = getShoppingCart()
@@ -119,7 +112,7 @@ class CartService extends ShoppingCartService {
     @Override
     Set checkOut(ShoppingCart previousShoppingCart = null) {
 
-        def totalAmount = deductItems();
+        def totalAmount = getTotalAmount(true);
 
         def shoppingCart = getShoppingCart()
         
@@ -134,15 +127,15 @@ class CartService extends ShoppingCartService {
         shoppingCart.checkedOut = true
         shoppingCart.save()
 
-        Transaction transaction = new Transaction(
-            user: SecUser.findByUsername(springSecurityService.getPrincipal().username),
+        Order order = new Order(
+            userId: springSecurityService.getPrincipal().id,
             totalAmount: totalAmount,
             shoppingCart: shoppingCart
         )
 
-        transaction.save(flush: true)
+        order.save(flush: true)
         
-        return checkedOutItems
+        return [ order.id ]
     }
 
     @Override
@@ -174,7 +167,7 @@ class CartService extends ShoppingCartService {
         return shoppingItem
     }
 
-    def deductItems() {
+    def getTotalAmount(boolean checkout = false) {
         def shoppingItems = getItems()
         def totalAmount = 0
 
@@ -192,10 +185,18 @@ class CartService extends ShoppingCartService {
             products << [
                 totalPrice: hamper.price * quantity
             ]
-            hamper.quantity -= quantity
-            hamper.save(flush: true)
+            if (checkout) {
+                hamper.quantity -= quantity
+                hamper.save(flush: true)
+            }
         }
 
         return totalAmount = products.totalPrice.sum()
+    }
+
+    def processGiftItems(SortedSet<GiftItem> giftItems) {
+        def cart = getShoppingCart()
+        cart.giftItems = giftItems
+        cart.save(flush: true, failOnError: true)
     }
 }

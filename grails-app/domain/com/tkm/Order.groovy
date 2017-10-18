@@ -4,43 +4,34 @@ import com.tkm.IEntity
 import com.tkm.EntityStatus
 import com.tkm.PendingStatus
 
+import com.metasieve.shoppingcart.ShoppingCart
 import grails.util.Environment
 
-class UserProfile implements Serializable, IEntity {
+class Order implements Serializable, IEntity {
 
     Long id
-    String name
-    String email
-    String address
-    String phoneNo
-    SortedSet<Recipient> recipients = new TreeSet<Recipient>()
+    Long userId
+    BigDecimal totalAmount
+    ShoppingCart shoppingCart
 
     // IEntity
     EntityStatus status = EntityStatus.ACTIVE
-    PendingStatus pendingStatus
+    PendingStatus pendingStatus = PendingStatus.PENDING_CONFIRM
     Date dateCreated
     Date lastUpdated
     String createdBy = '_SYSTEM_'
     String updatedBy = '_SYSTEM_'
 
-    static hasMany = [
-        recipients: Recipient,
-    ]
-
     static mapping = {
-        table 'USER_PROFILE'
+        table 'SALES_ORDER'
 
         if (Environment.isDevelopmentMode()) {
-            id generator:'sequence', params: [sequence: 'USER_PROFILE_SEQ']
+            id generator:'sequence', params: [sequence: 'SALES_ORDER_SEQ']
         }
     }
 
     static constraints = {
-        name(size: 1..100, nullable: true)
-        email(size: 1..100)
-        address(size: 1..200, nullable: true)
-        phoneNo(size: 1..20, nullable: true)
-        recipients(nullable: true)
+        totalAmount(size: 1..100)
 
         // IEntity
         status()

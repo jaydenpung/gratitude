@@ -3,7 +3,7 @@
             <thead>
                 <tr>
                     <th colspan="2">Product</th>
-                    <th>
+                    <th></th>
                     <th>Quantity</th>
                     <th class="text-center">Price</th>
                     <th class="text-center">Total</th>
@@ -67,9 +67,18 @@
                             </button>
                         </td>
                         <td>
-                            <a class="btn btn-success" href="${createLink(action: 'checkout', controller:'dashboard')}">
-                              Checkout <span class="glyphicon glyphicon-play"></span>
-                            </a>
+                            <sec:ifLoggedIn>
+                              <a class="btn btn-success" href="${createLink(action: 'checkout', controller:'dashboard')}">
+                                  Checkout <span class="glyphicon glyphicon-play"></span>
+                              </a>
+                            </sec:ifLoggedIn>
+
+                            <sec:ifNotLoggedIn>
+                              <a class="btn btn-success" id="btnProceed">
+                                  Checkout <span class="glyphicon glyphicon-play"></span>
+                              </a>
+                            </sec:ifNotLoggedIn>
+                            
                         </td>
                     </tr>
                 </g:else>
@@ -126,5 +135,10 @@
                 }
             });
         }
+
+        $("#btnProceed").click(function() {
+          window.location.href = "${createLink(controller: 'login', action: 'auth')}";
+          localStorage.setItem("paying", "true");
+        });
     });
 </script>

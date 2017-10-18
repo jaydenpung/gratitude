@@ -4,6 +4,13 @@
     <meta name="layout" content="main" />
   </head>
   <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
+
+    <style>
+      .footer {
+        position: relative;
+      }
+    </style>
+    
     <main>
       <div class="main">
 

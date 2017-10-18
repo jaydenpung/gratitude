@@ -121,7 +121,7 @@
 					<label for='remember_me'><g:message code="springSecurity.login.remember.me.label"/></label>
 				  </p>
                   <div class="form-group">
-                    <input type='submit' class="btn btn-round btn-b" id="submit" value="Login"/>
+                    <input type='submit' class="btn btn-round btn-b" id="submitLogin" value="Login"/>
                   </div>
                   <div class="form-group"><a href="">Forgot Password?</a></div>
                 </form>
@@ -132,7 +132,7 @@
                 <h4 class="font-alt">Register</h4>
                 <hr class="divider-w mb-10">
                 <div id="registerMessage" class='login_message'>${registerMessage}</div>
-                <form class="form" name= "registerForm">
+                <form class="form" name="registerForm">
                   <div class="form-group">
                     <input class="form-control" id="register_email" type="email" name="email" placeholder="Email" value="${email}"/>
                   </div>
@@ -143,7 +143,7 @@
                     <input class="form-control" id="register_re-password" type="password" name="re-password" placeholder="Re-enter Password"/>
                   </div>
                   <div class="form-group">
-                    <button id="btnRegister" class="btn btn-block btn-round btn-b">Register</button>
+                    <input id="btnRegister" type="submit" class="btn btn-block btn-round btn-b" value="Register"/>
                   </div>
                 </form>
               </div>
@@ -161,29 +161,43 @@
 		$(document).ready(function() {
 			saveSessionId();
 
-			$("#btnRegister").click(function() {
-				$.ajax({
-				  url: "${createLink(controller: 'secUser', action: 'register')}",
-				  type: 'POST',
-				  data: { email: $("#register_email").val(), password: $("#register_password").val(), rePassword: $('#register_re-password').val() },
-				  success: function(result) {
-				  	if(result.success == false) {
-				  		$('#registerMessage').html(result.registerMessage);
-				  	}
-				  	else {
-				  		$("#username").val($("#register_email").val());
-				  		$("#password").val($("#register_password").val());
-
-				  		$("#submit").trigger("click");
-				  	}
-				  },
-				  error: function(result) {
-				  	$('#registerMessage').html("Error: Please contact admin");
-				  }
-				});
-
+			$('[name=registerForm]').submit(function() {
 				return false;
-		  });
+			})
+
+			$('[name=registerForm]').keypress(function(el) {
+				if (el.keyCode == 13) {
+					$("#btnRegister").trigger('click');
+				}
+			});
+
+			$("#btnRegister").click(function() {
+				console.log('haha');
+				if ($('[name=registerForm]').data('bootstrapValidator').validate().isValid()) {
+
+					$.ajax({
+					  url: "${createLink(controller: 'secUser', action: 'register')}",
+					  type: 'POST',
+					  data: { email: $("#register_email").val(), password: $("#register_password").val(), rePassword: $('#register_re-password').val() },
+					  success: function(result) {
+					  	if(result.success == false) {
+					  		$('#registerMessage').html(result.registerMessage);
+					  	}
+					  	else {
+					  		$("#username").val($("#register_email").val());
+					  		$("#password").val($("#register_password").val());
+
+					  		$("#submitLogin").trigger("click");
+					  	}
+					  },
+					  error: function(result) {
+					  	$('#registerMessage').html("Error: Please contact admin");
+					  }
+					});
+
+					return false;
+				}
+		  	});
 		});
 
 		function saveSessionId() {

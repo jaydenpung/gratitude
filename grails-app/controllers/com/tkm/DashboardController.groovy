@@ -254,21 +254,26 @@ class DashboardController {
             hampers.each { hamper ->
                 //TODO: Performance improvement
                 def quantity = cartService.getQuantity(hamper).value
-                products << [
-                    id: hamper.id,
-                    imageGeneratedName: hamper.image.generatedName,
-                    name: hamper.name,
-                    shortDescription: hamper.shortDescription,
-                    quantity: hamper.quantity,
-                    price: hamper.price,
-                    cartQuantity: quantity,
-                    totalPrice: hamper.price * quantity
-                ]
+
+                while (quantity) {
+                    products << [
+                        id: hamper.id,
+                        imageGeneratedName: hamper.image.generatedName,
+                        name: hamper.name,
+                        shortDescription: hamper.shortDescription,
+                        stockLeft: hamper.quantity,
+                        price: hamper.price
+                    ]
+                    quantity--;
+                }
             }
 
-            def totalAmount = products.totalPrice.sum()
+            def totalAmount = products.price.sum()
 
-            [ products: products, totalAmount: totalAmount ]
+            //Get Recipients
+            def recipients = springSecurityService.getCurrentUser().userProfile.recipients
+
+            [ products: products, totalAmount: totalAmount, recipients: recipients ]
         }
         catch (Exception ex) {
             log.error("checkout() failed: ${ex.message}", ex)
@@ -306,7 +311,6 @@ class DashboardController {
 
     def test() {
         try{
-
         }
         catch (Exception ex) {
             log.error("test() failed: ${ex.message}", ex)
@@ -369,13 +373,142 @@ class DashboardController {
         }
     }
 
-    def completePayment() {
+    def getRecipientList() {
         try {
-            def cart = cartService.getShoppingCart()
-            cartService.checkOut(cart);
+            def recipients = springSecurityService.getCurrentUser().userProfile.recipients
+
+            render (template: '/shared/recipientList', model: [ recipients: recipients ])
+        }
+        catch (Exception ex) {
+            log.error("getRecipientList() failed: ${ex.message}", ex)
+        }
+    }
+
+    def addRecipient() {
+        def results = [:]
+
+        try {
+            def recipient = new Recipient(name: params.name, contactNo: params.contactNo, address: params.address)
+            recipient.save(flush: true)
+
+            def userProfile = springSecurityService.getCurrentUser().userProfile
+            userProfile.recipients.add(recipient)
+            userProfile.save(flush: true)
+
+            results.success = true
+            results.id = recipient.id
+        }
+        catch (Exception ex) {
+            log.error("addRecipient() failed: ${ex.message}", ex)
+            results.success = false
+            results.errorMessage = ex.message
+        }
+
+        render (results as JSON)
+    }
+
+    def deleteRecipient() {
+        def results = [:]
+
+        try {
+            def recipient = Recipient.findById(params.id)
+            recipient.status = EntityStatus.DELETED
+            recipient.save(flush: true)
+
+            def userProfile = springSecurityService.getCurrentUser().userProfile
+            userProfile.recipients.remove(recipient)
+            userProfile.save(flush: true)
+
+            results.success = true
+            results.id = params.id
+        }
+        catch (Exception ex) {
+            log.error("deleteRecipient() failed: ${ex.message}", ex)
+            results.success = false
+            results.errorMessage = ex.message
+        }
+
+        render (results as JSON)
+    }
+
+    def updateRecipient() {
+        def results = [:]
+
+        try {
+            def recipient = Recipient.findById(params.id)
+            recipient.name = params.name
+            recipient.contactNo = params.contactNo
+            recipient.address = params.address
+            recipient.save(flush: true)
+
+            results.success = true
+            results.id = recipient.id
+        }
+        catch (Exception ex) {
+            log.error("updateRecipient() failed: ${ex.message}", ex)
+            results.success = false
+            results.errorMessage = ex.message
+        }
+
+        render (results as JSON)
+    }
+
+    def proceedToPayment() {
+        try {
+            def hamperIds = params.list('hamperId')*.toLong()
+            def recipientIds = params.list('recipient')*.toLong()
+            def giftMessages = params.list('giftMessage')
+            def giftItems = []
+
+            for (int i = 0; i < hamperIds.size(); i++) {
+                
+                def giftItem = [
+                    hamperId: hamperIds[i],
+                    recipient: Recipient.findById(recipientIds[i]),
+                    giftMessage: giftMessages[i],
+                    price: Hamper.findById(hamperIds[i]).price
+                ]
+
+                giftItems.add(giftItem)
+            }
+
+            session.giftItems = giftItems
+
+            def totalAmount = cartService.getTotalAmount()
+
+            render (view: 'payment', model: [ totalAmount: totalAmount ])
+        }
+        catch (Exception ex) {
+            log.error("proceedToPayment() failed: ${ex.message}", ex)
+        }
+    }
+
+    def completePayment() {
+        def orderId
+
+        try {
+            SortedSet<GiftItem> giftItems = new TreeSet<GiftItem>()
+
+            session.giftItems.each {
+                giftItems.add(
+                    new GiftItem(
+                        hamperId: it.hamperId,
+                        recipient: it.recipient,
+                        giftMessage: it.giftMessage,
+                        price: it.price
+                    ).save(flush: true)
+                )
+            }
+
+            session.giftItems = null
+
+            cartService.processGiftItems(giftItems)
+            orderId = cartService.checkOut()[0]
         }
         catch (Exception ex) {
             log.error("completePayment() failed: ${ex.message}", ex)
         }
+
+        redirect (controller: 'account', action: 'viewOrder', params: [id: orderId])
     }
 }

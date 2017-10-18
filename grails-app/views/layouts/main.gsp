@@ -85,6 +85,9 @@
       <!-- Cart Modal -->
       <g:render template="/shared/cartModal"/>
 
+      <!-- Recipient Modal -->
+      <g:render template="/shared/recipientModal"/>
+
       <!-- Navigation Bar -->
       <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
         <div class="container">
@@ -117,6 +120,11 @@
             $('#cartModal').on('shown.bs.modal', function() {
                 var ajaxUrl = "${createLink(controller: 'dashboard', action: 'getCartList')};"
                 refreshSoppingList(ajaxUrl);
+            });
+
+            $('#recipientModal').on('shown.bs.modal', function() {
+                var ajaxUrl = "${createLink(controller: 'dashboard', action: 'getRecipientList')};"
+                refreshRecipientList(ajaxUrl);
             });
         });
     </script>

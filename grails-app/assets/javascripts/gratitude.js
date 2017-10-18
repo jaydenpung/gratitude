@@ -51,3 +51,17 @@ function refreshSoppingList(ajaxUrl) {
         alert("Something went wrong");
     });
 }
+
+function refreshRecipientList(ajaxUrl) {
+    var modal = $("#recipientModal");
+    var target = $("#recipientModalBody");
+
+    $.get(ajaxUrl)
+    .done(function(ajaxData){
+        target.html(ajaxData);
+        modal.modal('show');
+    })
+    .fail(function(){
+        alert("Something went wrong");
+    });
+}
