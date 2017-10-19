@@ -224,23 +224,29 @@
                 refreshSoppingList(ajaxUrl);
             });
 
-            $.ajax({
-              url: "${createLink(controller: 'dashboard', action: 'transferShoppingCart')}",
-              type: 'POST',
-              data: { previousSessionId: localStorage.getItem("previousSessionId") },
-              success: function(result) {
-                localStorage.removeItem("previousSessionId");
+            <sec:ifLoggedIn>
 
-                if (localStorage.getItem("paying") == "true") {
-                  localStorage.removeItem("paying");
-                  window.location.href="${createLink(controller: 'dashboard', action: 'checkout')}";
-                }
-              },
-              error: function(result) {
+              if (localStorage.getItem("previousSessionId") != null) {
+
+                $.ajax({
+                  url: "${createLink(controller: 'dashboard', action: 'transferShoppingCart')}",
+                  type: 'POST',
+                  data: { previousSessionId: localStorage.getItem("previousSessionId") },
+                  success: function(result) {
+                    localStorage.removeItem("previousSessionId");
+
+                    if (localStorage.getItem("paying") == "true") {
+                      localStorage.removeItem("paying");
+                      window.location.href="${createLink(controller: 'dashboard', action: 'checkout')}";
+                    }
+                  },
+                  error: function(result) {
+                  }
+                });
+
               }
-            });
 
-            
+            </sec:ifLoggedIn>           
 
         });
     </script>

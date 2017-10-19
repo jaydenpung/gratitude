@@ -61,6 +61,7 @@ class HamperService {
                     order(searchContext.sort, searchContext.order)
                 }
                 ne("status", EntityStatus.DELETED)
+                gt("quantity", 0L)
             }
 
             rsp.results = resultList

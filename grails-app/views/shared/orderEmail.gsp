@@ -1,53 +1,17 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html"%>
 <html lang="en-US" dir="ltr">
   <head>
-    <meta name="layout" content="main2" />
+
   </head>
   <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
-
-    <style>
-      .footer {
-        position: relative;
-      }
-    </style>
     
     <main>
       <div class="main">
         <div class="container">
 
-          <%-- Title --%>
-          <div class="row">
-            <div class="col-sm-6 col-sm-offset-3">
-              <br />
-              <h1 class="module-title font-alt">View Order</h1>
-            </div>
-          </div>
-
-          <h1>Customer Details</h1>
-
-          <%-- User Details --%>
-          <div class="row">
-            <div class="col-sm-12">
-              <table class="table table-striped table-border checkout-table">
-                <tr>
-                  <th>User Id: </th>
-                  <td>${user.id}</td>
-                </tr>
-                <tr>
-                  <th>Username: </th>
-                  <td>${user.username}</td>
-                </tr>
-                <tr>
-                  <th>Name: </th>
-                  <td>${user.userProfile.name}</td>
-                </tr>
-                <tr>
-                  <th>Contact No: </th>
-                  <td>${user.userProfile.phoneNo}</td>
-                </tr>
-              </table>
-            </div>
-          </div>
+          <h3>${message}</h3>
+          <br/>
+          <br/>
 
           <h1>Order Details</h1>
 
@@ -81,7 +45,7 @@
                 <table class="table table-striped table-border checkout-table">
                   <thead>
                       <tr>
-                          <th colspan="2">Product</th>
+                          <th>Product</th>
                           <th class="text-center">Price</th>
                           <th class="text-center">Recipient</th>
                           <th class="text-center">Gift Message</th>
@@ -91,24 +55,19 @@
                     <g:each var="product" in="${products}">
                       <input type="hidden" name="hamperId" class="form-control input-sm" value="${product.id}"/>
                       <tr hamperId="${product.id}" hamperPrice="${product.price}">
-                          <td class="col-sm-2">
-                              <a class="thumbnail pull-left tkmSmallImage" href="${createLink(controller:'dashboard', action: 'view', params: [id: product.id])}">
-                                  <img src="${createLink(action: 'renderImage', controller:'image', params: [id: product.imageGeneratedName])}"/>
-                              </a>
-                          </td>
-                          <td class="col-sm-2">
-                              <h4 class="media-heading"><a href="${createLink(controller:'dashboard', action: 'view', params: [id: product.id])}">${product.name}</a></h4>
+                          <td class="col-sm-3">
+                              <h4 class="media-heading">${product.name}</h4>
                               <h5 class="media-heading">${product.shortDescription}</h5>
                           </td>
                           <td class="col-sm-2 text-center text-nowrap">
                               <strong>RM ${product.price}</strong>
                           </td>
-                          <td class="col-sm-2 text-nowrap">
+                          <td class="col-sm-3 text-center text-nowrap">
                               <strong>Name: </strong> ${product.recipient.name} <br/>
                               <strong>Contact No: </strong> ${product.recipient.contactNo} <br/>
                               <strong>Address: </strong> ${product.recipient.address} 
                           </td>
-                          <td class="col-sm-6 text-center text-nowrap">
+                          <td class="col-sm-4 text-center">
                               ${product.giftMessage}
                           </td>
                       </tr>
@@ -146,19 +105,7 @@
 
           </g:form>
 
-          <div class="row">
-            <div class="col-sm-12 text-center">
-              <g:if test="${order.pendingStatus == com.tkm.PendingStatus.PENDING_CONFIRM}">
-                <a href="${createLink(controller:'order', action: 'confirmOrder', params: [id: order.id])}" class="btn btn-success">Confirm Order</a>
-              </g:if>
-              <g:if test="${order.pendingStatus == com.tkm.PendingStatus.PENDING_DELIVERY}">
-                <a href="${createLink(controller:'order', action: 'completeOrder', params: [id: order.id])}" class="btn btn-success">Complete Order</a>
-              </g:if>
-            </div>
-          </div>
-
           <br/>
-
         </div>
       </div>
     </main>

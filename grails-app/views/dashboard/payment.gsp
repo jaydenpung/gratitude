@@ -53,8 +53,13 @@
               paypal.Button.render({
 
                 // Set your environment
-
-                env: 'sandbox', // sandbox | production
+                <g:if test="${grails.util.Environment.current == grails.util.Environment.DEVELOPMENT}">
+                  env: 'sandbox',
+                </g:if>
+                
+                <g:if test="${grails.util.Environment.current == grails.util.Environment.PRODUCTION}">
+                  env: 'production',
+                </g:if>
 
                 // Specify the style of the button
 

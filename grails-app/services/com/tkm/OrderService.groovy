@@ -8,6 +8,9 @@ import com.tkm.SecUser
 class OrderService {
 
     def imageService
+    def mailService
+    def hamperService
+    def springSecurityService
 
     final static fcn = [
         'like': 'like',
@@ -113,6 +116,8 @@ class OrderService {
             orders.each {
                 it.pendingStatus = PendingStatus.PENDING_DELIVERY
                 it.save(flush: true)
+
+                sendOrderMail(it.id)
             }
 
             rsp.result = orders
@@ -140,6 +145,7 @@ class OrderService {
             orders.each {
                 it.pendingStatus = PendingStatus.PENDING_NONE
                 it.save(flush: true)
+                sendOrderMail(it.id)
             }
 
             rsp.result = orders
@@ -149,5 +155,60 @@ class OrderService {
             rsp.errors = ex.message
         }
         return rsp
+    }
+
+    def sendOrderMail(Long id) {
+        try {
+            def userId = springSecurityService.getPrincipal().id
+            def rsp = getOrderByIdAndUserId(id, userId)
+            def order = rsp.result
+
+            def products = []
+
+            order.shoppingCart.giftItems.each { item ->
+                def hamper = hamperService.getHamperById(item.hamperId).result
+                products << [
+                    id: hamper.id,
+                    imageGeneratedName: hamper.image.generatedName,
+                    name: hamper.name,
+                    shortDescription: hamper.shortDescription,
+                    price: item.price,
+                    recipient: item.recipient,
+                    giftMessage: item.giftMessage
+                ]
+            }
+
+            def totalAmount = order.totalAmount
+
+            def customer = SecUser.findById(order.userId)
+            def emailSubject = "Your order " + order.id + " from GratitudeHampers has been "
+            def message = "This is to inform you that your order at www.gratitudehampers.com with Order ID: " + order.id + " has been "
+
+            switch (order.pendingStatus) {
+                case PendingStatus.PENDING_DELIVERY:
+                    message += "confirmed"
+                    emailSubject += "confirmed"
+                    break;
+                case PendingStatus.PENDING_NONE:
+                    message += "delivered"
+                    emailSubject += "delivered"
+                    break;
+                default:
+                    message += "updated"
+                    emailSubject += "updated"
+                    break;
+            }
+
+            sendMail {
+                async true
+                to customer.username
+                subject emailSubject
+                body( view:"/shared/orderEmail", model: [ message: message, order: order, products: products, totalAmount: totalAmount ])
+            }
+        }
+        catch (Exception ex) {
+            log.error("sendOrderMail() failed: ${ex.message}", ex)
+        }
+
     }
 }

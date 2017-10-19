@@ -14,6 +14,7 @@ class OrderController {
     def cartService
     def springSecurityService
     def hamperService
+    def mailService
 
     def list() {
         try {
@@ -83,8 +84,8 @@ class OrderController {
 
     def edit(Long id) {
         try {
-            def userId = springSecurityService.getCurrentUser().id
-            def rsp = orderService.getOrderByIdAndUserId(id, userId)
+            def user = springSecurityService.getCurrentUser()
+            def rsp = orderService.getOrderByIdAndUserId(id, user.id)
             def order = rsp.result
 
             def products = []
@@ -104,7 +105,7 @@ class OrderController {
 
             def totalAmount = order.totalAmount
 
-            [ order: order, products: products, totalAmount: totalAmount ]
+            [ user: user, order: order, products: products, totalAmount: totalAmount ]
         }
         catch (Exception ex) {
             log.error("view() failed: ${ex.message}", ex)

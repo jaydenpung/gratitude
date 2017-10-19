@@ -69,6 +69,7 @@ grails.project.dependency.resolution = {
 
         compile ':spring-security-core:2.0-RC4'
         compile "org.grails.plugins:shopping-cart:0.8.2"
+        compile ":mail:1.0.7"
 
         // Uncomment these to enable additional asset-pipeline capabilities
         //compile ":sass-asset-pipeline:2.14.1"
