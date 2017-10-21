@@ -61,7 +61,7 @@ class OrderController {
                     rows << [
                         id: order.id,
                         name: SecUser.findById(order.userId).username,
-                        totalAmount: order.totalAmount,
+                        totalAmount: 'RM ' + new DecimalFormat('0.00').format(order.totalAmount),
                         dateCreated: new SimpleDateFormat(g.message(code: 'default.simpleDateTime.format')).format(order.dateCreated),
                         status: g.message(code: 'label.pendingStatus.' + (order.pendingStatus))
                     ]

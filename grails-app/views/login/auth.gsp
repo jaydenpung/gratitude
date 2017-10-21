@@ -101,6 +101,10 @@
         <section class="module">
           <div class="container">
             <div class="row">
+            	
+        	  <div class="col-sm-6 col-sm-offset-3 align-center">
+                <g:render template="/shared/messages"/>
+              </div>
 
               <%-- Login --%>
               <div class="col-sm-5 col-sm-offset-1 mb-sm-40" id="login">
@@ -123,7 +127,7 @@
                   <div class="form-group">
                     <input type='submit' class="btn btn-round btn-b" id="submitLogin" value="Login"/>
                   </div>
-                  <div class="form-group"><a href="">Forgot Password?</a></div>
+                  <div class="form-group"><a href="${createLink(action: 'forgotPassword', controller:'login')}">Forgot Password?</a></div>
                 </form>
               </div>
 
@@ -238,7 +242,7 @@
 	            			message: 'Passwords not matched'
 	            		},
 	            		notEmpty: {
-	                    	message: 'password cannot be empty'
+	                    	message: 'Password cannot be empty'
 	                    }
 	            	}
 	            },
@@ -249,7 +253,7 @@
 	            			message: 'Passwords not matched'
 	            		},
 	            		notEmpty: {
-	                    	message: 'password cannot be empty'
+	                    	message: 'Password cannot be empty'
 	                    }
 	            	}
 	            }

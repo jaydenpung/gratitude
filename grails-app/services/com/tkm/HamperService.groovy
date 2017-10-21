@@ -49,7 +49,7 @@ class HamperService {
                         value = new BigDecimal(it.value)
                         "${fcn[operator]}"(name, decorator[operator](value))
                     }
-                    else if (it.name == 'price') {
+                    else if (it.name == 'quantity') {
                         value = it.value.toLong()
                         "${fcn[operator]}"(name, decorator[operator](value))
                     }
@@ -61,7 +61,6 @@ class HamperService {
                     order(searchContext.sort, searchContext.order)
                 }
                 ne("status", EntityStatus.DELETED)
-                gt("quantity", 0L)
             }
 
             rsp.results = resultList

@@ -16,9 +16,7 @@ class SecUserController {
         def password = params['password']
         def rePassword = params['rePassword']
             
-        try{
-        	
-
+        try{      	
         	if (password != rePassword) {
                 registerMessage = "Passwords did not match!"
                 success = false

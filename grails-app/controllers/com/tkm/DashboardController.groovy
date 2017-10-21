@@ -25,7 +25,8 @@ class DashboardController {
         try {
             def searchContext = new SearchContext()
             [
-                [ name: "name", value: params.name, operator: "ilike" ]
+                [ name: "name", value: params.name, operator: "ilike" ],
+                [ name: "quantity", value: "0", operator: ">" ]
             ].each {
                 if (it.value) {
                     def searchableField = new SearchableField()
@@ -99,8 +100,19 @@ class DashboardController {
     def landingPage() {
         try {
             def searchContext = new SearchContext()
+            [
+                [ name: "quantity", value: "0", operator: ">" ]
+            ].each {
+                if (it.value) {
+                    def searchableField = new SearchableField()
+                    searchableField.name = it.name
+                    searchableField.value = it.value
+                    searchableField.operator = it.operator
+                    searchContext.fields.add(searchableField)
+                }
+            }
 
-            searchContext.order = "desc"
+            searchContext.order = "asc"
             searchContext.sort = "dateCreated"
             searchContext.max = 8
 
@@ -108,13 +120,7 @@ class DashboardController {
             def hampers = rsp.results
 
             //Exclusive products
-            searchContext = new SearchContext()
-
-            searchContext.order = "asc"
-            searchContext.sort = "dateCreated"
-            searchContext.max = 8
-
-            def exclusiveHampers = hamperService.search(searchContext).results
+            def exclusiveHampers = hampers[0..7] //TODO: add Recommend feature
 
             [ hampers: hampers, exclusiveHampers: exclusiveHampers ]
         }

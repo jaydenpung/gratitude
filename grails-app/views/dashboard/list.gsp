@@ -26,7 +26,7 @@
         </section>
 
         <!-- Filter and Sorting -->
-        <section class="module-small">
+        <!-- <section class="module-small">
           <div class="container">
             <form class="row">
               <div class="col-sm-4 mb-sm-20">
@@ -59,7 +59,7 @@
               </div>
             </form>
           </div>
-        </section>
+        </section> -->
 
         <hr class="divider-w">
 

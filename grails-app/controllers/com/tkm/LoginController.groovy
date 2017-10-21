@@ -27,6 +27,9 @@ import org.springframework.security.authentication.LockedException
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.WebAttributes
 
+
+import java.security.MessageDigest
+
 @Secured('permitAll')
 class LoginController {
 
@@ -150,5 +153,114 @@ class LoginController {
     def logout() {
         session.invalidate()
         redirect uri: SpringSecurityUtils.securityConfig.logout.filterProcessesUrl // '/j_spring_security_logout'
+    }
+
+    def forgotPassword() {
+    }
+
+    def submitForgotPassword() {
+
+        def email = params.email
+        def user = SecUser.findByUsername(email)
+
+        if (user) {
+            def generator = { String alphabet, int n ->
+                new Random().with {
+                    (1..n).collect {
+                        alphabet[ nextInt(alphabet.length()) ]}.join()
+                }
+            }
+
+            def token1 = generator( (('A'..'Z') + ('0'..'9')).join(), 15)
+            def token2 = MessageDigest.getInstance("MD5").digest((user.username).bytes).encodeHex().toString()
+
+            user.passwordResetToken = "${token1}${token2}"
+            user.save(flush: true)
+
+            sendMail {
+                async true
+                to email
+                subject "Gratitude Hampers - Reset Password"
+                body "It seems you have forgot your password? Please click on this link to reset your password: ${createLink(absolute: true, action: 'resetPassword', controller:'login', params: [token: user.passwordResetToken])}"
+            }
+        }
+
+        flash.message = "We have sent you an email with the password reset link. Please check your email."
+        redirect(action: 'forgotPassword')
+    }
+
+    def resetPassword() {
+        def success = false
+        def user
+        def token
+
+        try {
+            token = params.token
+            user = SecUser.findByPasswordResetToken(token)
+
+            if (user) {
+
+                if (user.passwordResetToken) {
+                    success = true
+                }
+                else {
+                    throw new Exception ("resetPassword() : User Token is null ${user.passwordResetToken}")
+                }
+            }
+            else {
+                throw new Exception ("resetPassword() : Can't find user with token ${token}")
+            }
+        }
+        catch (Exception ex) {
+            redirect(action: 'forgotPassword')
+        }
+
+        if (!success) {
+            redirect(action: 'forgotPassword')
+        }
+
+        [ username: user.username, token: token ]
+    }
+
+    def submitResetPassword() {
+        def token = params.token
+        def password = params.password
+        def success = false
+        def user
+
+        try {
+            user = SecUser.findByPasswordResetToken(token)
+
+            if (user && token) {
+
+                if (user.passwordResetToken) {
+                    user.passwordResetToken = null
+                    user.password = password
+                    user.save(flush: true)
+                    success = true
+                }
+                else {
+                    throw new Exception ("submitResetPassword() : User Token is null ${user.passwordResetToken}")
+                }
+            }
+            else {
+                throw new Exception ("submitResetPassword() : Can't find user with token ${token}")
+            }
+        }
+        catch (Exception ex) {
+            redirect(action: 'forgotPassword')
+        }
+
+        if (success) {
+            sendMail {
+                async true
+                to user.username
+                subject "Gratitude Hampers - Password Changed"
+                body "Your password has recently been changed. Please contact us if you are not aware of this."
+            }
+
+            flash.message = "Password changed successfully."
+            redirect(action: 'auth')
+        }
     }
 }

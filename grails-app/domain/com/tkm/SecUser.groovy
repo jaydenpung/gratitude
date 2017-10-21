@@ -6,6 +6,7 @@ class SecUser {
 
     String username
     String password
+    String passwordResetToken
     boolean enabled = true
     boolean accountExpired = false
     boolean accountLocked = false
@@ -17,6 +18,7 @@ class SecUser {
     static constraints = {
         username blank: false, unique: true
         password blank: false
+        passwordResetToken nullable: true
     }
 
     static mapping = {

@@ -181,7 +181,7 @@ class OrderService {
             def totalAmount = order.totalAmount
 
             def customer = SecUser.findById(order.userId)
-            def emailSubject = "Your order " + order.id + " from GratitudeHampers has been "
+            def emailSubject = "Gratitude Hampers - Your order ID " + order.id + " from GratitudeHampers has been "
             def message = "This is to inform you that your order at www.gratitudehampers.com with Order ID: " + order.id + " has been "
 
             switch (order.pendingStatus) {
