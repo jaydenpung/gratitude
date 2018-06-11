@@ -96,7 +96,7 @@ environments {
     }
     production {
         grails.logging.jul.usebridge = false
-        grails.serverURL = "https://www.gratitudehampers.com"   // Beware this is an application-wide setting 
+        grails.serverURL = "https://www.gratitudehampers.jaypung.com"   // Beware this is an application-wide setting 
     }
 }
 
