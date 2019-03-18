@@ -77,7 +77,7 @@ class HamperService {
         try {
             def hamper = Hamper.withCriteria {
                 eq('id', id)
-                ne('status', EntityStatus.DELETED)
+                //ne('status', EntityStatus.DELETED)
             }[0]
 
             if (!hamper) {
