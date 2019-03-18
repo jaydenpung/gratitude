@@ -128,7 +128,7 @@
               <div class="titan-caption">
                 <div class="caption-content">
                   <div class="font-alt mb-30 titan-title-size-1"><g:message code="client.name.label"/></div>
-                  <div class="font-alt mb-30 titan-title-size-4">2017</div>
+                  <div class="font-alt mb-30 titan-title-size-4 copyrightYear">2017</div>
                   <div class="font-alt mb-40 titan-title-size-1">Your online gift destination</div><a class="section-scroll btn btn-border-w btn-round" href="${createLink(action: 'list', controller:'dashboard')}">Learn More</a>
                 </div>
               </div>
