@@ -120,9 +120,9 @@ class DashboardController {
             def hampers = rsp.results
 
             //Exclusive products
-            def exclusiveHampers = hampers[0..7] //TODO: add Recommend feature
+            //def exclusiveHampers = hampers[0..7] //TODO: add Recommend feature
 
-            [ hampers: hampers, exclusiveHampers: exclusiveHampers ]
+            [ hampers: hampers, exclusiveHampers: hampers ]
         }
         catch (Exception ex) {
             log.error("landingPage() failed: ${ex.message}", ex)
